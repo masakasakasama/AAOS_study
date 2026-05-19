@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.aaosstudy.BuildConfig
 import com.example.aaosstudy.Routes
 
 private data class Module(
@@ -111,6 +112,14 @@ fun HomeScreen(onOpen: (String) -> Unit) {
                     )
                 }
             }
+        }
+        item {
+            Text(
+                "ビルド ${BuildConfig.VERSION_NAME}（自動更新対応）",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                modifier = Modifier.padding(top = 8.dp),
+            )
         }
     }
 }

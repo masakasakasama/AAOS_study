@@ -11,12 +11,17 @@ android {
         applicationId = "com.example.aaosstudy"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1.0"
+
+        val buildNumber =
+            (project.findProperty("buildNumber") as String?)?.toIntOrNull() ?: 1
+        val buildSha = (project.findProperty("buildSha") as String?) ?: "local"
+        val shortSha = buildSha.take(7)
+
+        versionCode = buildNumber
+        versionName = "0.1.$buildNumber+$shortSha"
         vectorDrawables { useSupportLibrary = true }
 
-        val buildSha = (project.findProperty("buildSha") as String?) ?: "local"
-        buildConfigField("String", "GIT_SHA", "\"$buildSha\"")
+        buildConfigField("String", "GIT_SHA", "\"$shortSha\"")
         buildConfigField(
             "String", "UPDATE_REPO", "\"masakasakasama/AAOS_study\""
         )
