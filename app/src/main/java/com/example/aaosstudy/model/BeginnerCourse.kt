@@ -317,6 +317,57 @@ val c = colorResource(R.color.cluster_accent)
         ),
     )
 
+    private val l8 = Lesson(
+        id = "b8", title = "AAOS エミュレータを入手して起動する",
+        minutes = 12,
+        blocks = listOf(
+            h("実機が無くても学べる"),
+            p(
+                "Android Studio の Device Manager で『Automotive』系の" +
+                    "システムイメージを選ぶと、AAOS エミュレータが使えます。" +
+                    "本アプリで概念をつかみ、エミュレータで実物を触る、の" +
+                    "二段構えが最短ルートです。",
+            ),
+            b(
+                "Android Studio → Device Manager → Create device",
+                "Category で Automotive を選択",
+                "Google APIs / Play 付きイメージを選ぶ",
+                "起動後 `adb devices` で認識を確認",
+            ),
+            tryIt(
+                "adb", "ADB ブリッジを見る",
+                "本アプリの状態を、起動したエミュレータへ流し込む" +
+                    "コマンドが自動生成されます。",
+            ),
+            quiz(
+                "AAOS エミュレータを作るとき選ぶカテゴリは？",
+                listOf("Phone", "Automotive", "TV"),
+                1,
+                "Automotive カテゴリの car 系イメージが AAOS。",
+            ),
+        ),
+    )
+
+    private val l9 = Lesson(
+        id = "b9", title = "Android Auto と AAOS の境界を一枚で",
+        minutes = 9,
+        blocks = listOf(
+            h("混同しやすい 2 つを整理"),
+            dia(DiagramType.CLUSTER_VS_IVI, "投影 (Auto) と OS 本体 (AAOS)"),
+            b(
+                "Android Auto: スマホ画面を車に投影。アプリはスマホ側",
+                "AAOS: 車に組込んだ OS。アプリは車側で動く",
+                "学習対象は AAOS（このアプリも AAOS を扱う）",
+            ),
+            quiz(
+                "アプリが車側で動くのはどっち？",
+                listOf("Android Auto", "AAOS", "どちらも同じ"),
+                1,
+                "AAOS は OS 本体。Auto は投影でアプリはスマホ側。",
+            ),
+        ),
+    )
+
     val course = Course(
         level = CourseLevel.BEGINNER,
         title = "AAOS をはじめる",
@@ -336,6 +387,11 @@ val c = colorResource(R.color.cluster_accent)
                 "実例と総まとめ",
                 "Polestar 2 ケース、用語整理",
                 listOf(l6, l7),
+            ),
+            Module(
+                "実機への橋渡し",
+                "エミュレータ起動と Auto/AAOS の整理",
+                listOf(l8, l9),
             ),
         ),
     )

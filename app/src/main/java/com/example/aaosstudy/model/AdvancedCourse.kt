@@ -272,6 +272,104 @@ adb install app-debug.apk
         ),
     )
 
+    private val l8 = Lesson(
+        id = "a8", title = "ADB で実エミュレータへ値を注入する",
+        minutes = 14,
+        blocks = listOf(
+            h("参照 VHAL を外から叩く"),
+            p(
+                "リファレンス VHAL は外部注入に対応し、cmd car_service の" +
+                    "inject-vhal-event でプロパティ値を流し込めます。本アプリの" +
+                    "ADB ブリッジは、現在状態をこのコマンド列に変換します。",
+            ),
+            code(
+                """
+# PERF_VEHICLE_SPEED = 0x11600207 = 291504647 (float m/s)
+adb shell cmd car_service inject-vhal-event 291504647 16.7
+# 読み出し
+adb shell dumpsys car_service --services CarPropertyService
+                """,
+                lang = "bash",
+            ),
+            warn(
+                "サブコマンド構文は AOSP 版差あり。`cmd car_service -h` で" +
+                    "自分の版を確認。プロパティ ID は VehicleProperty の実値。",
+            ),
+            tryIt(
+                "adb", "ADB ブリッジで生成",
+                "VHAL Playground で状態を作り、この画面で全コマンドを" +
+                    "一括コピーして実機へ。",
+            ),
+            quiz(
+                "参照 VHAL に値を注入する CLI は？",
+                listOf(
+                    "adb shell am inject",
+                    "cmd car_service inject-vhal-event",
+                    "pm set-property",
+                ),
+                1,
+                "car_service のシェルコマンドで VHAL イベントを注入する。",
+            ),
+        ),
+    )
+
+    private val l9 = Lesson(
+        id = "a9", title = "OTA・Garage Mode・機能フラグ運用",
+        minutes = 13,
+        blocks = listOf(
+            h("止まっている間に賢く更新する"),
+            p(
+                "OTA 適用やインデックス再構築はユーザー不在の Garage Mode で" +
+                    "実施。機能の段階展開はフラグで制御し、車種/地域別に" +
+                    "出し分けます。アプリは電源状態に従い重い処理を Garage に" +
+                    "寄せる設計が望ましい。",
+            ),
+            dia(DiagramType.BOOT_FLOW, "Garage Mode が更新の窓"),
+            b(
+                "重いジョブは Garage Mode へスケジュール",
+                "機能フラグで車種/地域別に段階展開",
+                "電源遷移を CarPowerManager で監視",
+            ),
+            quiz(
+                "OTA 適用に適した状態は？",
+                listOf("走行中", "Garage Mode", "工場モード"),
+                1,
+                "ユーザー不在で安全に更新できる Garage Mode が定石。",
+            ),
+        ),
+    )
+
+    private val l10 = Lesson(
+        id = "a10", title = "1 プラットフォーム N 車種（Volvo の運用に学ぶ）",
+        minutes = 12,
+        blocks = listOf(
+            h("差分は『データ』に寄せる"),
+            case(
+                "Volvo Cars / Polestar",
+                "共通 AAOS プラットフォームを基盤に、車種差は RRO・VHAL " +
+                    "config・オーディオゾーン構成・機能フラグといった" +
+                    "『データ層』へ寄せる。アプリのコードを安定 API に" +
+                    "保つほど、新車種の立ち上げコストが下がる。",
+            ),
+            b(
+                "意匠差 → RRO",
+                "ハード差 → VHAL config / areaId",
+                "音響差 → car_audio_configuration.xml",
+                "出し分け → 機能フラグ",
+            ),
+            quiz(
+                "車種展開コストを下げる原則は？",
+                listOf(
+                    "車種ごとにアプリを fork",
+                    "差分をデータ層へ寄せコードは安定 API に保つ",
+                    "毎回フルスクラッチ",
+                ),
+                1,
+                "コード共通＋データで差し替えがスケールする運用。",
+            ),
+        ),
+    )
+
     val course = Course(
         level = CourseLevel.ADVANCED,
         title = "プラットフォームに踏み込む",
@@ -291,6 +389,11 @@ adb install app-debug.apk
                 "認証と総合",
                 "CTS/VTS・実車フロー・総合演習",
                 listOf(l6, l7),
+            ),
+            Module(
+                "実運用に踏み込む",
+                "ADB 注入・OTA/Garage・車種展開",
+                listOf(l8, l9, l10),
             ),
         ),
     )

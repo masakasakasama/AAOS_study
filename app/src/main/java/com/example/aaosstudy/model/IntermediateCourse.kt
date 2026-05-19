@@ -314,6 +314,78 @@ uxr.registerListener { r ->
         ),
     )
 
+    private val l8 = Lesson(
+        id = "i8", title = "購読のライフサイクルとスレッド",
+        minutes = 13,
+        blocks = listOf(
+            h("登録したら必ず解除する"),
+            p(
+                "registerCallback は onStart、unregisterCallback は onStop。" +
+                    "コールバックはメインスレッドとは限らないため、UI 更新は" +
+                    "メインへ戻す。Compose なら State 更新→自動再描画が楽。",
+            ),
+            code(
+                """
+override fun onStart() {
+    propertyManager.registerCallback(cb,
+        VehiclePropertyIds.PERF_VEHICLE_SPEED,
+        CarPropertyManager.SENSOR_RATE_UI)
+}
+override fun onStop() {
+    propertyManager.unregisterCallback(cb)
+}
+                """,
+            ),
+            warn("解除漏れはリークと無駄な電力消費。ライフサイクルに紐付ける。"),
+            quiz(
+                "unregisterCallback を呼ぶ典型箇所は？",
+                listOf("onCreate", "onStop / onDestroy", "コンストラクタ"),
+                1,
+                "登録は表示開始、解除は表示終了に対で行う。",
+            ),
+        ),
+    )
+
+    private val l9 = Lesson(
+        id = "i9", title = "SystemUI / システムバーと XML 配置",
+        minutes = 14,
+        blocks = listOf(
+            h("ナビバー/ステータスバーも『アプリ＋リソース』"),
+            p(
+                "AAOS の SystemUI は車向けで、バーの有無・位置・高さは" +
+                    "リソースとレイアウトで決まります。OEM は RRO で寸法や" +
+                    "表示要素を差し替え、画面構成を変えます。",
+            ),
+            fileMap(
+                "SystemUI のファイル対応",
+                link(
+                    "Car SystemUI 本体",
+                    "packages/apps/Car/SystemUI/ (frameworks 由来を継承)",
+                    "ナビバー/ステータスバーのレイアウトとロジック。",
+                ),
+                link(
+                    "バー高さ等の寸法",
+                    "同 res/values/dimens.xml（RRO で上書き対象）",
+                    "OEM はここを overlay して配置を変える。",
+                ),
+            ),
+            defaults(
+                "システムバーの既定",
+                def(
+                    "ナビ/ステータスバーの有無・高さ",
+                    "Car SystemUI のリファレンス寸法",
+                    "packages/apps/Car/SystemUI/res/values/",
+                ),
+            ),
+            quiz(
+                "OEM がバー配置を変える主手段は？",
+                listOf("SystemUI を fork して再ビルド必須", "RRO で寸法/構成を上書き", "不可能"),
+                1,
+                "多くは RRO による寸法・構成の差し替えで対応する。",
+            ),
+        ),
+    )
+
     val course = Course(
         level = CourseLevel.INTERMEDIATE,
         title = "Car API を使いこなす",
@@ -333,6 +405,11 @@ uxr.registerListener { r ->
                 "クラスターと配備",
                 "クラスター実装、署名と権限の現実",
                 listOf(l6, l7),
+            ),
+            Module(
+                "運用の勘所",
+                "購読ライフサイクル、SystemUI と配置",
+                listOf(l8, l9),
             ),
         ),
     )

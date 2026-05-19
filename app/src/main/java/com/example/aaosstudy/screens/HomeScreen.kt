@@ -61,6 +61,12 @@ fun HomeScreen(onOpen: (String) -> Unit) {
             "Scenario Presets",
             "One tap to load combined vehicle + theme states and compare.",
         ),
+        Module(
+            Routes.ADB,
+            "ADB ブリッジ（リモコン）",
+            "いまのサンドボックス状態を、実 AAOS エミュレータへ流し込む " +
+                "adb コマンド列に変換。PC でコピペ実行。",
+        ),
     )
 
     LazyColumn(

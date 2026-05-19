@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.aaosstudy.model.CourseLevel
+import com.example.aaosstudy.screens.AdbBridgeScreen
 import com.example.aaosstudy.screens.ArchitectureScreen
 import com.example.aaosstudy.screens.CarPropertyExplorerScreen
 import com.example.aaosstudy.screens.CourseDetailScreen
@@ -45,6 +46,7 @@ object Routes {
     const val COURSES = "courses"
     const val COURSE = "course"
     const val LESSON = "lesson"
+    const val ADB = "adb"
 }
 
 @Composable
@@ -75,6 +77,9 @@ fun AAOSStudyApp() {
                 }
                 composable(Routes.SCENARIOS) {
                     ScenariosScreen(vm) { nav.popBackStack() }
+                }
+                composable(Routes.ADB) {
+                    AdbBridgeScreen(vm) { nav.popBackStack() }
                 }
                 composable(Routes.COURSES) {
                     CoursesHomeScreen(
