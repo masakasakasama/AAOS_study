@@ -11,9 +11,11 @@ object AdvancedCourse {
         blocks = listOf(
             h("CarService は『方針』の層"),
             p(
-                "CarService は常駐の特権サービス群。CarPropertyService が" +
-                    "VHAL 購読を集約し、権限検査・UX 制限・キャッシュをして" +
-                    "全アプリへ変化イベントを配信します。",
+                "CarService は常駐の privileged な Service 群（system " +
+                    "server 側で動く特別な権限を持つプロセス）。" +
+                    "CarPropertyService が VHAL の subscribe を集約し、" +
+                    "permission チェック・UX restriction・キャッシュをして" +
+                    "全アプリへ change イベントを配信します。",
             ),
             dia(DiagramType.DATA_FLOW, "Service が購読を集約し全リスナーへ分配"),
             fileMap(
@@ -189,19 +191,18 @@ adb install app-debug.apk
                     "ゾーン別ボリューム・フォーカス API。",
                 ),
                 link(
-                    "オーディオゾーン構成",
-                    "packages/services/Car/service/res/xml/" +
-                        "car_audio_configuration.xml",
-                    "ゾーンとバスのマッピング既定。",
+                    "オーディオゾーン構成 (car_audio_configuration.xml)",
+                    "OEM が device/vendor 側で用意（AOSP に参照例あり）",
+                    "audio zone と bus のマッピングを定義する XML。",
                 ),
             ),
             defaults(
                 "オーディオゾーンの既定",
                 def(
-                    "ゾーン数・バス割当",
+                    "zone 数・bus 割当",
                     "リファレンス構成（OEM が車種別に上書き）",
-                    "packages/services/Car/service/res/xml/" +
-                        "car_audio_configuration.xml",
+                    "car_audio_configuration.xml（device/vendor 同梱、" +
+                        "AOSP の Car サービス配下に参照例）",
                 ),
             ),
             quiz(
@@ -284,16 +285,19 @@ adb install app-debug.apk
             ),
             code(
                 """
-# PERF_VEHICLE_SPEED = 0x11600207 = 291504647 (float m/s)
+# PERF_VEHICLE_SPEED = 0x11600207 = 291504647 (float, m/s)
 adb shell cmd car_service inject-vhal-event 291504647 16.7
-# 読み出し
-adb shell dumpsys car_service --services CarPropertyService
+# 状態の確認（CarService 全体を dump。出力は長い）
+adb shell dumpsys car_service
                 """,
                 lang = "bash",
             ),
             warn(
-                "サブコマンド構文は AOSP 版差あり。`cmd car_service -h` で" +
-                    "自分の版を確認。プロパティ ID は VehicleProperty の実値。",
+                "cmd car_service のサブコマンドと引数（特に area/zone の" +
+                    "指定方法: 位置引数 / -a / -z）は AOSP バージョンで差が" +
+                    "あります。必ず `adb shell cmd car_service -h` で自分の" +
+                    "版の構文を確認してください。プロパティ ID は " +
+                    "VehicleProperty の実値です。",
             ),
             tryIt(
                 "adb", "ADB ブリッジで生成",

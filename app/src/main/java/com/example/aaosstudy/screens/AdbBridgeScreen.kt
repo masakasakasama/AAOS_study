@@ -42,7 +42,8 @@ private fun script(v: VehicleState): String {
     return """
 # --- AAOS エミュレータへ現在のサンドボックス状態を注入 ---
 # 事前: emulator 起動済み & `adb devices` で認識されていること
-# 構文は AOSP 版により差あり。read は dumpsys で確認可能。
+# 構文は AOSP 版により差あり。area/zone 指定は版で異なる
+# （位置引数 / -a / -z）。`cmd car_service -h` で要確認。
 
 # PERF_VEHICLE_SPEED (0x11600207) float[m/s]
 adb shell cmd car_service inject-vhal-event 291504647 ${"%.2f".format(speedMps)}
@@ -62,14 +63,15 @@ adb shell cmd car_service inject-vhal-event 289408009 $ign
 # ENV_OUTSIDE_TEMPERATURE (0x11600703) float[C]
 adb shell cmd car_service inject-vhal-event 291505923 ${v.outsideTempC.toInt()}
 
-# HVAC_TEMPERATURE_SET (0x15600503) float[C]  seat=ROW_1_LEFT
-adb shell cmd car_service inject-vhal-event 358614275 ${v.hvacSetTempC.toInt()} -a 1
+# HVAC_TEMPERATURE_SET (0x15600503) float[C]  ※seat zone 指定が必要。
+# area の渡し方は版依存（-a / -z / 位置引数）。要 `-h` 確認。
+adb shell cmd car_service inject-vhal-event 358614275 ${v.hvacSetTempC.toInt()}
 
-# HVAC_FAN_SPEED (0x15400500) int  seat=ROW_1_LEFT
-adb shell cmd car_service inject-vhal-event 356517120 ${v.hvacFanSpeed} -a 1
+# HVAC_FAN_SPEED (0x15400500) int  ※seat zone 指定が必要（同上）
+adb shell cmd car_service inject-vhal-event 356517120 ${v.hvacFanSpeed}
 
-# 確認（読み出し）
-adb shell dumpsys car_service --services CarPropertyService
+# 確認（CarService 全体を dump。出力は長い）
+adb shell dumpsys car_service
     """.trim()
 }
 
@@ -112,7 +114,10 @@ fun AdbBridgeScreen(vm: SimulatorViewModel, onBack: () -> Unit) {
                     "・cmd car_service のサブコマンド構文は AOSP 版で差が" +
                     "あります。動かない場合は `adb shell cmd car_service -h` " +
                     "で自分の版の構文を確認してください。\n" +
-                    "・読み出しは dumpsys CarPropertyService で確認可能。\n" +
+                    "・読み出しは `adb shell dumpsys car_service` で確認" +
+                    "（出力は長い）。\n" +
+                    "・HVAC など zone 別プロパティは area 指定が必要。" +
+                    "渡し方は版依存（-a / -z / 位置引数）。\n" +
                     "・本アプリ自体はネットワーク ADB をしません。学習用に" +
                     "『正しいコマンドを生成する』ところまでを担います。",
                 style = MaterialTheme.typography.bodySmall,
