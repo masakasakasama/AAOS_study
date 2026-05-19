@@ -2,7 +2,7 @@ package com.example.aaosstudy.model
 
 import androidx.compose.ui.graphics.Color
 
-/** One-tap presets that mutate both vehicle + theme state at once. */
+/** ワンタップで車両状態とテーマをまとめて切り替えるプリセット。 */
 data class Scenario(
     val name: String,
     val description: String,
@@ -13,9 +13,9 @@ data class Scenario(
 object Scenarios {
     val all = listOf(
         Scenario(
-            name = "Highway cruise",
-            description = "Drive gear, 110 km/h, warm cabin. Watch the " +
-                "speedo and RPM react to the VHAL values.",
+            name = "高速巡航",
+            description = "ドライブ、110km/h、暖かい車内。VHAL の値に" +
+                "合わせて速度計と RPM が反応する様子を見ます。",
             vehicle = VehicleState(
                 speedKph = 110f, engineRpm = 2400f, fuelPercent = 48f,
                 gear = Gear.DRIVE, outsideTempC = 24f, hvacSetTempC = 21f,
@@ -24,9 +24,9 @@ object Scenarios {
             theme = OemThemeState(),
         ),
         Scenario(
-            name = "Nordic minimal (dark)",
-            description = "A restrained Scandinavian-style cluster: near " +
-                "monochrome, square gauges, deep dark background.",
+            name = "北欧ミニマル（ダーク）",
+            description = "抑えた北欧風クラスター。ほぼモノクロ、角ばった" +
+                "ゲージ、深い暗色背景。",
             vehicle = VehicleState(
                 speedKph = 64f, engineRpm = 1500f, gear = Gear.DRIVE,
             ),
@@ -41,9 +41,9 @@ object Scenarios {
             ),
         ),
         Scenario(
-            name = "Warm classic (light)",
-            description = "Light cluster, amber accent, rounded gauges — a " +
-                "traditional analog-inspired skin via RRO.",
+            name = "ウォームクラシック（ライト）",
+            description = "明るいクラスター、琥珀のアクセント、丸いゲージ。" +
+                "アナログ調の意匠を RRO で再現。",
             vehicle = VehicleState(
                 speedKph = 40f, engineRpm = 1200f, gear = Gear.DRIVE,
                 fuelPercent = 80f,
@@ -59,9 +59,9 @@ object Scenarios {
             ),
         ),
         Scenario(
-            name = "Parked & charging",
-            description = "Park gear, ignition on, cool cabin request — a " +
-                "typical pre-conditioning state.",
+            name = "駐車・充電中",
+            description = "パーキング、イグニッション ON、車内を冷やす要求。" +
+                "プレコンディショニングの典型状態。",
             vehicle = VehicleState(
                 speedKph = 0f, engineRpm = 0f, gear = Gear.PARK,
                 fuelPercent = 35f, outsideTempC = 9f, hvacSetTempC = 24f,

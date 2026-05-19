@@ -28,7 +28,9 @@ jobs:
           gradle-version: "8.7"
 
       - name: Build debug APK
-        run: gradle :app:assembleDebug --no-daemon --stacktrace
+        run: >
+          gradle :app:assembleDebug --no-daemon --stacktrace
+          -PbuildSha=${{ github.sha }}
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -47,7 +49,8 @@ jobs:
           name: Latest debug APK
           prerelease: true
           files: app/build/outputs/apk/debug/app-debug.apk
-          body: >
-            最新のデバッグ APK。スマホでこのページの `app-debug.apk`
-            をタップしてダウンロード→インストール（提供元不明のアプリを許可）。
-            push のたびに自動更新されます。
+          body: |
+            最新のデバッグ APK。push のたびに自動更新されます。
+            アプリ内の自動アップデートはこの commit を比較に使います。
+
+            build-sha: ${{ github.sha }}

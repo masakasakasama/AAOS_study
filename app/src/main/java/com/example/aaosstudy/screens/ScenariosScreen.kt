@@ -32,7 +32,7 @@ fun ScenariosScreen(vm: SimulatorViewModel, onBack: () -> Unit) {
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        BackHeader("Scenario Presets", onBack)
+        BackHeader("シナリオ プリセット", onBack)
 
         IviDashboard(
             vehicle = vehicle,
@@ -50,7 +50,7 @@ fun ScenariosScreen(vm: SimulatorViewModel, onBack: () -> Unit) {
                 Button(
                     onClick = { vm.applyScenario(scenario) },
                     modifier = Modifier.fillMaxWidth(),
-                ) { Text("Apply this scenario") }
+                ) { Text("このシナリオを適用") }
             }
         }
     }

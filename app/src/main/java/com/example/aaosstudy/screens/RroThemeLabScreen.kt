@@ -52,7 +52,7 @@ fun RroThemeLabScreen(vm: SimulatorViewModel, onBack: () -> Unit) {
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        BackHeader("RRO Theme Lab", onBack)
+        BackHeader("RRO テーマラボ", onBack)
 
         IviDashboard(
             vehicle = vehicle,
@@ -60,11 +60,11 @@ fun RroThemeLabScreen(vm: SimulatorViewModel, onBack: () -> Unit) {
             modifier = Modifier.padding(horizontal = 16.dp),
         )
 
-        SectionCard("Overlay resources", Modifier.padding(horizontal = 16.dp)) {
+        SectionCard("オーバーレイ・リソース", Modifier.padding(horizontal = 16.dp)) {
             Text(
-                "An OEM never edits the cluster app. They ship an RRO APK " +
-                    "that replaces these resource values. Change them here " +
-                    "and watch the same UI re-render.",
+                "OEM はクラスターアプリを編集しません。これらのリソース値を" +
+                    "置き換える RRO APK を配布します。ここで値を変えて、" +
+                    "同じ UI が再描画される様子を見てください。",
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(vertical = 8.dp),
             )
@@ -105,12 +105,12 @@ fun RroThemeLabScreen(vm: SimulatorViewModel, onBack: () -> Unit) {
         }
 
         SectionCard(
-            "Generated overlay XML",
+            "生成されたオーバーレイ XML",
             Modifier.padding(horizontal = 16.dp),
         ) {
             Text(
-                "This is the file an OEM would author to reproduce exactly " +
-                    "the look above:",
+                "上の見た目をそのまま再現するために OEM が書く" +
+                    "ファイルです:",
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(vertical = 8.dp),
             )

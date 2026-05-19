@@ -24,11 +24,11 @@ fun CarPropertyExplorerScreen(onBack: () -> Unit) {
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        BackHeader("Car API Explorer", onBack)
+        BackHeader("Car API エクスプローラ", onBack)
 
         Text(
-            "Real CarPropertyManager usage. You stay in app code; the call " +
-                "chain shows what runs underneath.",
+            "実際の CarPropertyManager の使い方。アプリコードに居ながら、" +
+                "呼び出し連鎖で裏側を確認できます。",
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(horizontal = 16.dp),
         )
@@ -53,7 +53,7 @@ fun CarPropertyExplorerScreen(onBack: () -> Unit) {
                 )
                 CodeBlock(doc.appCode)
                 Text(
-                    "Call chain",
+                    "呼び出し連鎖",
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),

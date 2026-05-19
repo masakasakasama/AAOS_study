@@ -59,7 +59,7 @@ fun IviDashboard(
                     fontWeight = FontWeight.Medium,
                 )
                 Text(
-                    if (vehicle.ignitionOn) "IGN ON" else "IGN OFF",
+                    if (vehicle.ignitionOn) "電源 ON" else "電源 OFF",
                     color = if (vehicle.ignitionOn) theme.accent
                     else theme.onCluster.copy(alpha = 0.4f),
                     fontSize = 12.sp,
@@ -74,7 +74,7 @@ fun IviDashboard(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Gauge(
-                    label = "SPEED",
+                    label = "速度",
                     value = vehicle.speedKph,
                     max = 220f,
                     unit = "km/h",
@@ -82,7 +82,7 @@ fun IviDashboard(
                     modifier = Modifier.weight(1f),
                 )
                 Gauge(
-                    label = "RPM",
+                    label = "回転数",
                     value = vehicle.engineRpm,
                     max = 8000f,
                     unit = "rpm",
@@ -133,7 +133,7 @@ fun IviDashboard(
                         fontWeight = FontWeight.Medium,
                     )
                     Text(
-                        "FAN  ${"▮".repeat(vehicle.hvacFanSpeed)}",
+                        "ファン  ${"▮".repeat(vehicle.hvacFanSpeed)}",
                         color = theme.accent,
                         fontWeight = FontWeight.Bold,
                     )
@@ -243,7 +243,7 @@ private fun FuelBar(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text("FUEL", color = theme.onCluster, fontSize = 12.sp)
+            Text("燃料", color = theme.onCluster, fontSize = 12.sp)
             Text(
                 "${percent.toInt()}%",
                 color = if (low) Color(0xFFE0533D) else theme.onCluster,

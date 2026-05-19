@@ -1,11 +1,9 @@
 package com.example.aaosstudy.model
 
 /**
- * Catalog of the most-used car properties for the API Explorer screen.
- *
- * Each entry shows the real CarPropertyManager code an app-layer developer
- * writes, plus what happens underneath. This is the "upper layer first"
- * material: you stay in app code, but you can see the call chain.
+ * API エクスプローラ用、よく使う車両プロパティのカタログ。
+ * 各項目は実際の CarPropertyManager コードと、その裏で起きることを示す。
+ * 「上位レイヤー優先」の教材：アプリコードに居ながら呼び出し連鎖が見える。
  */
 data class CarPropertyDoc(
     val title: String,
@@ -20,65 +18,65 @@ data class CarPropertyDoc(
 object CarPropertyCatalog {
 
     val connect = CarPropertyDoc(
-        title = "Connecting to Car service",
-        propertyId = "Car (entry point)",
+        title = "Car サービスへ接続する",
+        propertyId = "Car（エントリポイント）",
         area = "—",
         access = "—",
-        summary = "Every Car API call needs a Car instance. Car binds to " +
-            "CarService (a persistent system service). From it you get " +
-            "managers like CarPropertyManager, CarHvacManager, etc.",
+        summary = "Car API は必ず Car インスタンスが要る。Car は常駐の" +
+            "システムサービス CarService に bind し、そこから " +
+            "CarPropertyManager や CarHvacManager などを取得する。",
         appCode = """
 val car = Car.createCar(context)
 val propertyManager =
     car.getCarManager(Car.PROPERTY_SERVICE) as CarPropertyManager
 
-// Always disconnect when done (e.g. in onDestroy)
+// 使い終わったら必ず切断（例: onDestroy）
 car.disconnect()
         """.trim(),
         callChain = listOf(
-            "App: Car.createCar(context)",
-            "Binder IPC -> CarService (system_server-side persistent service)",
-            "CarService returns CarPropertyManager handle",
-            "Manager is your app-side proxy for all property I/O",
+            "アプリ: Car.createCar(context)",
+            "Binder IPC → CarService（常駐の特権サービス）",
+            "CarService が CarPropertyManager のハンドルを返す",
+            "この Manager がアプリ側のプロパティ入出力の窓口",
         ),
     )
 
     val all = listOf(
         connect,
         CarPropertyDoc(
-            title = "Read vehicle speed",
+            title = "車速を読む",
             propertyId = "VehiclePropertyIds.PERF_VEHICLE_SPEED",
-            area = "GLOBAL (area = 0)",
-            access = "READ",
-            summary = "Continuous sensor. Subscribe with a callback rather " +
-                "than polling so you only react to changes.",
+            area = "GLOBAL（area = 0）",
+            access = "READ（読み取り）",
+            summary = "連続センサー。ポーリングせず、コールバックで購読して" +
+                "変化時だけ反応する。",
             appCode = """
 propertyManager.registerCallback(
     object : CarPropertyManager.CarPropertyEventCallback {
         override fun onChangeEvent(value: CarPropertyValue<*>) {
-            val speedMps = value.value as Float   // metres / second
+            val speedMps = value.value as Float   // m/s
             updateSpeedo(speedMps * 3.6f)         // -> km/h
         }
         override fun onErrorEvent(propId: Int, areaId: Int) {}
     },
     VehiclePropertyIds.PERF_VEHICLE_SPEED,
-    CarPropertyManager.SENSOR_RATE_UI,            // ~5 Hz
+    CarPropertyManager.SENSOR_RATE_UI,            // 約 5 Hz
 )
             """.trim(),
             callChain = listOf(
-                "App registers callback on CarPropertyManager",
-                "CarService subscribes to the VHAL property",
-                "VHAL (vendor HAL / emulator) pushes new sensor samples",
-                "CarService dispatches CarPropertyValue back to the app",
+                "アプリが CarPropertyManager にコールバック登録",
+                "CarService が VHAL のプロパティを購読",
+                "VHAL（ベンダー HAL / エミュレータ）が新しい値を push",
+                "CarService が CarPropertyValue をアプリへ配信",
             ),
         ),
         CarPropertyDoc(
-            title = "Read selected gear",
+            title = "選択中のギアを読む",
             propertyId = "VehiclePropertyIds.GEAR_SELECTION",
-            area = "GLOBAL (area = 0)",
-            access = "READ",
-            summary = "Enum-style int property. Map the raw int to " +
-                "VehicleGear constants (PARK/REVERSE/NEUTRAL/DRIVE).",
+            area = "GLOBAL（area = 0）",
+            access = "READ（読み取り）",
+            summary = "enum 風の int プロパティ。生の int を VehicleGear " +
+                "定数（PARK/REVERSE/NEUTRAL/DRIVE）に対応づける。",
             appCode = """
 val gear = propertyManager.getIntProperty(
     VehiclePropertyIds.GEAR_SELECTION, /* areaId = */ 0
@@ -91,18 +89,18 @@ val label = when (gear) {
 }
             """.trim(),
             callChain = listOf(
-                "App calls getIntProperty(...) (blocking read)",
-                "CarService reads the cached/queried VHAL value",
-                "Raw int returned; app maps it to a VehicleGear constant",
+                "アプリが getIntProperty(...) を呼ぶ（ブロッキング読み取り）",
+                "CarService がキャッシュ/問い合わせた VHAL 値を読む",
+                "生の int が返り、アプリが VehicleGear 定数へ変換",
             ),
         ),
         CarPropertyDoc(
-            title = "Set HVAC temperature",
+            title = "HVAC の設定温度を書く",
             propertyId = "VehiclePropertyIds.HVAC_TEMPERATURE_SET",
-            area = "SEAT (per-zone areaId)",
-            access = "READ_WRITE",
-            summary = "Zoned property: each seat area has its own value. " +
-                "Requires the Car.PERMISSION_CONTROL_CAR_CLIMATE permission.",
+            area = "SEAT（座席ゾーンごとの areaId）",
+            access = "READ_WRITE（読み書き）",
+            summary = "ゾーン別プロパティ。座席エリアごとに値を持つ。" +
+                "Car.PERMISSION_CONTROL_CAR_CLIMATE 権限が必要。",
             appCode = """
 val driverZone = VehicleAreaSeat.SEAT_ROW_1_LEFT
 propertyManager.setFloatProperty(
@@ -112,19 +110,19 @@ propertyManager.setFloatProperty(
 )
             """.trim(),
             callChain = listOf(
-                "App calls setFloatProperty(prop, areaId, value)",
-                "CarService checks the caller's car permission",
-                "Write forwarded to VHAL for that seat area",
-                "VHAL confirms; a change event echoes back to listeners",
+                "アプリが setFloatProperty(prop, areaId, value) を呼ぶ",
+                "CarService が呼び出し元の車両権限を検査",
+                "その座席エリア向けに書き込みを VHAL へ転送",
+                "VHAL が確定、変更イベントが購読側へ返る",
             ),
         ),
         CarPropertyDoc(
-            title = "Read fuel / battery level",
+            title = "燃料 / バッテリー残量を読む",
             propertyId = "VehiclePropertyIds.FUEL_LEVEL",
-            area = "GLOBAL (area = 0)",
-            access = "READ",
-            summary = "Static-ish property. Pair with INFO_FUEL_CAPACITY to " +
-                "compute a percentage for the gauge.",
+            area = "GLOBAL（area = 0）",
+            access = "READ（読み取り）",
+            summary = "ほぼ静的なプロパティ。INFO_FUEL_CAPACITY と" +
+                "組み合わせてゲージ用の割合を計算する。",
             appCode = """
 val level = propertyManager.getFloatProperty(
     VehiclePropertyIds.FUEL_LEVEL, 0
@@ -135,9 +133,9 @@ val capacity = propertyManager.getFloatProperty(
 val percent = (level / capacity) * 100f
             """.trim(),
             callChain = listOf(
-                "App reads FUEL_LEVEL and INFO_FUEL_CAPACITY",
-                "CarService serves values from VHAL",
-                "App derives the gauge percentage in app code",
+                "アプリが FUEL_LEVEL と INFO_FUEL_CAPACITY を読む",
+                "CarService が VHAL の値を返す",
+                "アプリ側でゲージの割合を算出",
             ),
         ),
     )

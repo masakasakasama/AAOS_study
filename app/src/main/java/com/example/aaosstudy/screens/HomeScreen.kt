@@ -34,32 +34,32 @@ fun HomeScreen(onOpen: (String) -> Unit) {
         ),
         Module(
             Routes.VHAL,
-            "VHAL Playground",
-            "Move sliders for speed / RPM / fuel / gear / HVAC and watch " +
-                "the IVI cluster react live.",
+            "VHAL プレイグラウンド",
+            "速度 / RPM / 燃料 / ギア / HVAC のスライダーを動かすと、" +
+                "IVI クラスターがその場で反応します。",
         ),
         Module(
             Routes.RRO,
-            "RRO Theme Lab",
-            "Reskin the cluster like an OEM. See the generated overlay XML " +
-                "that produces the look.",
+            "RRO テーマラボ",
+            "OEM のようにクラスターを再スキン。その見た目を生む" +
+                "オーバーレイ XML が自動生成されます。",
         ),
         Module(
             Routes.API,
-            "Car API Explorer",
-            "Real CarPropertyManager code per property + the App → Service " +
-                "→ VHAL call chain.",
+            "Car API エクスプローラ",
+            "プロパティ別の実 CarPropertyManager コードと、" +
+                "アプリ → サービス → VHAL の呼び出し連鎖。",
         ),
         Module(
             Routes.ARCH,
-            "Architecture Map",
-            "Tap through the AAOS layers, app-layer first. Plus how RRO " +
-                "really works.",
+            "アーキテクチャ図",
+            "AAOS の各層をタップで解説（アプリ層から）。" +
+                "RRO の仕組みも。",
         ),
         Module(
             Routes.SCENARIOS,
-            "Scenario Presets",
-            "One tap to load combined vehicle + theme states and compare.",
+            "シナリオ プリセット",
+            "ワンタップで車両＋テーマの状態を読み込み、見比べる。",
         ),
         Module(
             Routes.ADB,
@@ -83,10 +83,10 @@ fun HomeScreen(onOpen: (String) -> Unit) {
                     color = MaterialTheme.colorScheme.primary,
                 )
                 Text(
-                    "An interactive sandbox for Android Automotive OS " +
-                        "concepts — app layer first. Nothing here talks to " +
-                        "a real HAL; it models the behavior so you can see " +
-                        "cause → effect on the IVI screen.",
+                    "Android Automotive OS の概念を体で学ぶ" +
+                        "インタラクティブ・サンドボックス（アプリ層優先）。" +
+                        "実 HAL には接続せず挙動を再現し、操作 → IVI 画面の" +
+                        "変化という因果が直感的にわかります。",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 4.dp, bottom = 8.dp),
                 )

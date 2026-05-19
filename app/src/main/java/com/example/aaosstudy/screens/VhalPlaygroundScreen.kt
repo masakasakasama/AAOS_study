@@ -39,7 +39,7 @@ fun VhalPlaygroundScreen(vm: SimulatorViewModel, onBack: () -> Unit) {
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        BackHeader("VHAL Playground", onBack)
+        BackHeader("VHAL プレイグラウンド", onBack)
 
         IviDashboard(
             vehicle = vehicle,
@@ -48,13 +48,13 @@ fun VhalPlaygroundScreen(vm: SimulatorViewModel, onBack: () -> Unit) {
         )
 
         SectionCard(
-            "Vehicle properties",
+            "車両プロパティ",
             Modifier.padding(horizontal = 16.dp),
         ) {
             Text(
-                "Each control writes one simulated VHAL property. On real " +
-                    "AAOS this is what the emulator's property injector or " +
-                    "a CarPropertyManager.set*Property() call does.",
+                "各操作は擬似的な VHAL プロパティを1つ書き換えます。実 AAOS " +
+                    "では、エミュレータのプロパティ注入や " +
+                    "CarPropertyManager.set*Property() 呼び出しに相当します。",
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(vertical = 8.dp),
             )
@@ -126,7 +126,7 @@ fun VhalPlaygroundScreen(vm: SimulatorViewModel, onBack: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp),
-            ) { Text("Reset to AOSP defaults") }
+            ) { Text("AOSP 既定値に戻す") }
         }
     }
 }

@@ -34,11 +34,11 @@ fun ArchitectureScreen(onBack: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(10.dp),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = 16.dp),
     ) {
-        item { BackHeader("Architecture Map", onBack) }
+        item { BackHeader("アーキテクチャ図", onBack) }
         item {
             Text(
-                "Tap a layer. Top is your app — where most OEM work " +
-                    "happens — down to the vehicle.",
+                "層をタップしてください。一番上があなたのアプリ" +
+                    "（OEM の作業の大半はここ）、下が車両です。",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
@@ -74,7 +74,7 @@ fun ArchitectureScreen(onBack: () -> Unit) {
                                 style = MaterialTheme.typography.bodySmall,
                             )
                             Text(
-                                "Key: " + layer.examples.joinToString(" · "),
+                                "要素: " + layer.examples.joinToString(" · "),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.secondary,
                                 modifier = Modifier.padding(top = 8.dp),
@@ -86,7 +86,7 @@ fun ArchitectureScreen(onBack: () -> Unit) {
         }
         item {
             SectionCard(
-                "How RRO actually works",
+                "RRO の実際の仕組み",
                 Modifier.padding(horizontal = 16.dp),
             ) {
                 Text(

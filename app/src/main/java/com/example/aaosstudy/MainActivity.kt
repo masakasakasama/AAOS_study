@@ -27,6 +27,7 @@ import com.example.aaosstudy.screens.ScenariosScreen
 import com.example.aaosstudy.screens.VhalPlaygroundScreen
 import com.example.aaosstudy.state.SimulatorViewModel
 import com.example.aaosstudy.ui.theme.AAOSStudyTheme
+import com.example.aaosstudy.update.UpdatePrompt
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,5 +125,6 @@ fun AAOSStudyApp() {
                 }
             }
         }
+        UpdatePrompt()
     }
 }

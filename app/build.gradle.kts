@@ -14,6 +14,12 @@ android {
         versionCode = 1
         versionName = "0.1.0"
         vectorDrawables { useSupportLibrary = true }
+
+        val buildSha = (project.findProperty("buildSha") as String?) ?: "local"
+        buildConfigField("String", "GIT_SHA", "\"$buildSha\"")
+        buildConfigField(
+            "String", "UPDATE_REPO", "\"masakasakasama/AAOS_study\""
+        )
     }
 
     buildTypes {
@@ -37,6 +43,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {

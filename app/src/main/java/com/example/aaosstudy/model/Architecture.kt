@@ -1,6 +1,6 @@
 package com.example.aaosstudy.model
 
-/** Layers of the AAOS stack, top (your app) to bottom (hardware). */
+/** AAOS スタックの各層（上＝あなたのアプリ、下＝ハードウェア）。 */
 data class ArchLayer(
     val name: String,
     val oneLiner: String,
@@ -11,59 +11,58 @@ data class ArchLayer(
 object Architecture {
     val layers = listOf(
         ArchLayer(
-            name = "1. Your App (App layer)",
-            oneLiner = "An ordinary Android app — but talks to Car APIs.",
-            detail = "Runs in its own process. Uses Jetpack/Compose for UI " +
-                "and the Car library for vehicle data. This is where you " +
-                "spend ~90% of OEM app work: HVAC apps, cluster, media, " +
-                "settings. No special build of Android needed to learn it.",
+            name = "1. あなたのアプリ（アプリ層）",
+            oneLiner = "普通の Android アプリ。ただし Car API を呼ぶ。",
+            detail = "自分のプロセスで動作。UI は Jetpack/Compose、車両" +
+                "データは Car ライブラリを使う。OEM の作業の約9割は" +
+                "ここ：HVAC・クラスター・メディア・設定。AAOS の特別" +
+                "ビルドが無くても学べる層。",
             examples = listOf("Activity / Service", "Compose UI", "ViewModel"),
         ),
         ArchLayer(
-            name = "2. Car API library (android.car)",
-            oneLiner = "Client-side SDK: Car + *Manager classes.",
-            detail = "Car.createCar() binds to CarService. Managers " +
-                "(CarPropertyManager, CarHvacManager, CarUxRestrictions...) " +
-                "are thin proxies that marshal calls over Binder. This is " +
-                "the boundary you code against.",
+            name = "2. Car API ライブラリ（android.car）",
+            oneLiner = "クライアント側 SDK：Car と各種 *Manager。",
+            detail = "Car.createCar() が CarService に bind。各 Manager" +
+                "（CarPropertyManager・CarHvacManager・CarUxRestrictions…）" +
+                "は Binder 越しに呼ぶ薄いプロキシ。あなたがコードを" +
+                "書く境界。",
             examples = listOf("Car", "CarPropertyManager", "CarHvacManager"),
         ),
         ArchLayer(
-            name = "3. Car Service (system service)",
-            oneLiner = "Persistent privileged service; the policy layer.",
-            detail = "Enforces car permissions, manages subscriptions, " +
-                "applies UX restrictions while driving, caches properties, " +
-                "and fans out change events to all listening apps.",
+            name = "3. Car Service（システムサービス）",
+            oneLiner = "常駐の特権サービス。方針（ポリシー）の層。",
+            detail = "車両権限の検査、購読管理、走行中の UX 制限、" +
+                "プロパティのキャッシュ、変更イベントを全アプリへ" +
+                "配信する。",
             examples = listOf("CarPropertyService", "CarPowerService"),
         ),
         ArchLayer(
-            name = "4. Vehicle HAL (VHAL)",
-            oneLiner = "Stable contract between Android and the vehicle.",
-            detail = "A defined set of VehicleProperty ids with area + " +
-                "access + change-mode. Vendors implement it; the emulator " +
-                "ships a reference VHAL you can poke for learning.",
-            examples = listOf("VehiclePropertyIds", "areaId", "access mode"),
+            name = "4. Vehicle HAL（VHAL）",
+            oneLiner = "Android と車両の安定した契約。",
+            detail = "VehicleProperty 群を id + area + access + " +
+                "changeMode で定義。ベンダーが実装し、エミュレータは" +
+                "学習用の参照 VHAL を提供する。",
+            examples = listOf("VehiclePropertyIds", "areaId", "アクセス種別"),
         ),
         ArchLayer(
-            name = "5. Vehicle hardware / Emulator",
-            oneLiner = "Real ECUs over a bus — or the AAOS emulator.",
-            detail = "On hardware, the VHAL bridges to CAN/automotive " +
-                "networks. For study, the emulator's VHAL lets you inject " +
-                "values with no car present.",
-            examples = listOf("CAN bus", "AAOS emulator", "reference VHAL"),
+            name = "5. 車両ハードウェア / エミュレータ",
+            oneLiner = "実 ECU をバスで、または AAOS エミュレータ。",
+            detail = "実機では VHAL が CAN/車載ネットワークへ橋渡し。" +
+                "学習ではエミュレータの VHAL に車なしで値を注入できる。",
+            examples = listOf("CAN バス", "AAOS エミュレータ", "参照 VHAL"),
         ),
     )
 
     val rro = """
-RRO (Runtime Resource Overlay) — how OEMs reskin without forking apps:
+RRO（Runtime Resource Overlay）— OEM がアプリを fork せず再スキンする方法:
 
-1. The system app references resources normally: @color/cluster_accent.
-2. The OEM ships a separate, tiny overlay APK targeting that package.
-3. The overlay redefines those resource names with new values.
-4. OverlayManager enables it; the resource framework returns the
-   overlaid value at runtime. The app's code/bytecode is unchanged.
+1. システムアプリはリソースを通常通り参照する: @color/cluster_accent。
+2. OEM は対象パッケージを狙う小さなオーバーレイ APK を別に配布。
+3. オーバーレイがそのリソース名を新しい値で再定義する。
+4. OverlayManager が有効化し、リソース解決が実行時にオーバーレイ値を
+   返す。アプリのコード/バイトコードは無改修のまま。
 
-Why it matters at the app layer: write code against resource names,
-never hard-code colors/strings/dimens, and any OEM can rebrand you.
+アプリ層での要点: リソース名で書き、色・文字・寸法を直書きしない。
+そうすれば、どの OEM でもあなたのアプリをブランド化できる。
     """.trim()
 }
