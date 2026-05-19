@@ -60,9 +60,9 @@ fun DiagramView(type: DiagramType, caption: String, modifier: Modifier = Modifie
 private fun NodeBox(
     title: String,
     subtitle: String? = null,
+    modifier: Modifier = Modifier,
     bg: Color = MaterialTheme.colorScheme.surface,
     fg: Color = MaterialTheme.colorScheme.onSurface,
-    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier
