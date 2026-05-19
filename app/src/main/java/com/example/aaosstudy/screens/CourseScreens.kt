@@ -109,10 +109,8 @@ private fun CourseCard(course: Course, done: Int, onClick: () -> Unit) {
                 modifier = Modifier.padding(top = 8.dp),
             )
             LinearProgressIndicator(
-                progress = {
-                    if (course.lessonCount == 0) 0f
-                    else done.toFloat() / course.lessonCount
-                },
+                progress = if (course.lessonCount == 0) 0f
+                else done.toFloat() / course.lessonCount,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 6.dp),
