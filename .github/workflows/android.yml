@@ -7,6 +7,9 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,3 +36,18 @@ jobs:
           name: aaos-study-debug-apk
           path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+
+      # スマホで 1 タップ取得できるよう、最新 APK を Release に添付。
+      # 取得先（固定 URL）: /releases/latest
+      - name: Publish APK to rolling "latest" release
+        if: github.ref == 'refs/heads/claude/aaos-simulator-app-Dp2qB' || github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest debug APK
+          prerelease: true
+          files: app/build/outputs/apk/debug/app-debug.apk
+          body: >
+            最新のデバッグ APK。スマホでこのページの `app-debug.apk`
+            をタップしてダウンロード→インストール（提供元不明のアプリを許可）。
+            push のたびに自動更新されます。
