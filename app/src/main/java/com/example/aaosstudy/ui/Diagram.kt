@@ -45,6 +45,14 @@ fun DiagramView(type: DiagramType, caption: String, modifier: Modifier = Modifie
                 DiagramType.PERMISSION_FLOW -> PermissionFlow()
                 DiagramType.BUILD_PIPELINE -> BuildPipeline()
                 DiagramType.PROPERTY_ANATOMY -> PropertyAnatomy()
+                DiagramType.API_SEQUENCE -> ApiSequence()
+                DiagramType.RRO_FILEMAP -> RroFileMap()
+                DiagramType.AREA_ID -> AreaId()
+                DiagramType.CHANGE_MODE -> ChangeMode()
+                DiagramType.UXR_STATE -> UxrState()
+                DiagramType.AUDIO_ZONES -> AudioZones()
+                DiagramType.MULTIUSER -> MultiUser()
+                DiagramType.UPDATE_FLOW -> UpdateFlow()
             }
         }
         Text(
@@ -368,6 +376,296 @@ private fun PropertyAnatomy() {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             NodeBox("changeMode", "STATIC/ONCHANGE/CONTINUOUS", modifier = Modifier.weight(1f))
             NodeBox("型", "Int / Float / …", modifier = Modifier.weight(1f))
+        }
+    }
+}
+
+@Composable
+private fun Tag(text: String, bg: Color, fg: Color) {
+    Text(
+        text,
+        color = fg,
+        fontSize = 11.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(bg)
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+    )
+}
+
+@Composable
+private fun ApiSequence() {
+    Column(Modifier.fillMaxWidth()) {
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Tag(
+                "App", MaterialTheme.colorScheme.primary.copy(0.18f),
+                MaterialTheme.colorScheme.onSurface,
+            )
+            Tag(
+                "Manager", MaterialTheme.colorScheme.surface,
+                MaterialTheme.colorScheme.onSurface,
+            )
+            Tag(
+                "CarService", MaterialTheme.colorScheme.surface,
+                MaterialTheme.colorScheme.onSurface,
+            )
+            Tag(
+                "VHAL", MaterialTheme.colorScheme.secondary.copy(0.18f),
+                MaterialTheme.colorScheme.onSurface,
+            )
+        }
+        Box(Modifier.size(8.dp))
+        SeqLine("① set/get", "App → Manager → CarService → VHAL", true)
+        SeqLine("② subscribe 登録", "App → CarService が VHAL を購読", true)
+        SeqLine("③ change イベント", "VHAL → CarService → 全 listener へ dispatch", false)
+        Text(
+            "set の結果も change イベントとして②の経路で返ってくる",
+            fontSize = 10.sp,
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.padding(top = 6.dp),
+        )
+    }
+}
+
+@Composable
+private fun SeqLine(label: String, desc: String, forward: Boolean) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 3.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            if (forward) "→" else "←",
+            color = if (forward) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.secondary,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(end = 6.dp),
+        )
+        Column {
+            Text(
+                label,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                desc,
+                fontSize = 11.sp,
+                color = MaterialTheme.colorScheme.onSurface.copy(0.75f),
+            )
+        }
+    }
+}
+
+@Composable
+private fun RroFileMap() {
+    Column(Modifier.fillMaxWidth()) {
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            NodeBox(
+                "システムアプリ APK",
+                "res/values/colors.xml\naccent = #1A73E8",
+                modifier = Modifier.weight(1f),
+            )
+            NodeBox(
+                "OEM Overlay APK",
+                "res/values/colors.xml\naccent = #E08A1E",
+                bg = MaterialTheme.colorScheme.secondary.copy(0.18f),
+                modifier = Modifier.weight(1f),
+            )
+        }
+        ArrowDown()
+        NodeBox(
+            "OverlayManager（同名リソースを解決）",
+            "frameworks/base/.../server/om/",
+            modifier = Modifier.fillMaxWidth(),
+        )
+        ArrowDown()
+        NodeBox(
+            "実行時に accent = #E08A1E",
+            "アプリのコードは @color/accent のまま無改修",
+            bg = MaterialTheme.colorScheme.primary.copy(0.18f),
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
+@Composable
+private fun AreaId() {
+    Column(Modifier.fillMaxWidth()) {
+        NodeBox(
+            "areaId = どの“場所”の値か",
+            "GLOBAL なら 0、ゾーン別なら VehicleArea* のビット",
+            bg = MaterialTheme.colorScheme.primary.copy(0.18f),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        ArrowDown()
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            NodeBox("GLOBAL", "areaId = 0\n例: 車速", modifier = Modifier.weight(1f))
+            NodeBox(
+                "VehicleAreaSeat",
+                "ROW_1_LEFT 等\n例: HVAC 温度",
+                bg = MaterialTheme.colorScheme.secondary.copy(0.14f),
+                modifier = Modifier.weight(1f),
+            )
+        }
+        Box(Modifier.size(6.dp))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            NodeBox("VehicleAreaWindow", "窓・デフロスト", modifier = Modifier.weight(1f))
+            NodeBox("VehicleAreaDoor", "ドア・ミラー", modifier = Modifier.weight(1f))
+        }
+        Text(
+            "1 つの propertyId が複数 areaId の値を持つ（座席ごとの温度など）",
+            fontSize = 10.sp,
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.padding(top = 6.dp),
+        )
+    }
+}
+
+@Composable
+private fun ChangeMode() {
+    Column(Modifier.fillMaxWidth()) {
+        NodeBox(
+            "changeMode = 値の出方",
+            "subscribe 時の挙動が変わる",
+            bg = MaterialTheme.colorScheme.primary.copy(0.18f),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        ArrowDown()
+        NodeBox("STATIC", "ほぼ不変。一度読めば十分（例: 燃料容量）", modifier = Modifier.fillMaxWidth())
+        Box(Modifier.size(6.dp))
+        NodeBox("ON_CHANGE", "変化したときだけ通知（例: ギア・ドア）", modifier = Modifier.fillMaxWidth())
+        Box(Modifier.size(6.dp))
+        NodeBox(
+            "CONTINUOUS",
+            "一定レートで連続通知（例: 車速・RPM）。SENSOR_RATE_* 指定",
+            bg = MaterialTheme.colorScheme.secondary.copy(0.14f),
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
+@Composable
+private fun UxrState() {
+    Row(
+        Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Column(Modifier.weight(1f)) {
+            Tag(
+                "停車中", MaterialTheme.colorScheme.primary.copy(0.18f),
+                MaterialTheme.colorScheme.onSurface,
+            )
+            Box(Modifier.size(6.dp))
+            NodeBox(
+                "フル UI",
+                "長文・動画・キーボード OK",
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+        Column(Modifier.weight(1f)) {
+            Tag(
+                "走行中", MaterialTheme.colorScheme.error.copy(0.20f),
+                MaterialTheme.colorScheme.onSurface,
+            )
+            Box(Modifier.size(6.dp))
+            NodeBox(
+                "制限 UI",
+                "項目数↓・入力制限\nrequiresDistractionOptimization",
+                bg = MaterialTheme.colorScheme.error.copy(0.10f),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
+@Composable
+private fun AudioZones() {
+    Column(Modifier.fillMaxWidth()) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(40.dp))
+                .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(40.dp))
+                .padding(14.dp)
+        ) {
+            Column {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    NodeBox(
+                        "Zone 0 (前席)",
+                        "ナビ音声・メディア",
+                        bg = MaterialTheme.colorScheme.primary.copy(0.14f),
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                Box(Modifier.size(8.dp))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    NodeBox("Zone 1 (後席)", "別音源 (RSE)", modifier = Modifier.weight(1f))
+                }
+            }
+        }
+        Text(
+            "zone ごとに volume と audio focus を独立管理（CarAudio）",
+            fontSize = 10.sp,
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.padding(top = 6.dp),
+        )
+    }
+}
+
+@Composable
+private fun MultiUser() {
+    Column(Modifier.fillMaxWidth()) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            NodeBox(
+                "User A",
+                "設定/アプリ/履歴",
+                bg = MaterialTheme.colorScheme.primary.copy(0.14f),
+                modifier = Modifier.weight(1f),
+            )
+            NodeBox("User B", "完全に分離", modifier = Modifier.weight(1f))
+        }
+        ArrowDown()
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            NodeBox("Cluster 画面", "display 0", modifier = Modifier.weight(1f))
+            NodeBox("Center IVI", "display 1", modifier = Modifier.weight(1f))
+            NodeBox("後席 RSE", "display 2", modifier = Modifier.weight(1f))
+        }
+        Text(
+            "ユーザー切替で空間（設定/アプリ）が入れ替わり、画面は複数同時",
+            fontSize = 10.sp,
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.padding(top = 6.dp),
+        )
+    }
+}
+
+@Composable
+private fun UpdateFlow() {
+    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        listOf(
+            "push" to "GitHub にコミットを push",
+            "CI build" to "Actions が APK を自動ビルド",
+            "release latest" to "app-debug.apk を rolling release に添付",
+            "アプリが確認" to "起動時に SHA を比較",
+            "更新ダイアログ" to "新しければ取得→インストール",
+        ).forEachIndexed { i, (t, s) ->
+            NodeBox(
+                t, s,
+                bg = if (i == 4) MaterialTheme.colorScheme.primary.copy(0.18f)
+                else MaterialTheme.colorScheme.surface,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            if (i != 4) ArrowDown()
         }
     }
 }

@@ -10,10 +10,11 @@ object IntermediateCourse {
         minutes = 16,
         blocks = listOf(
             h("3 つのアクセス様式"),
+            dia(DiagramType.API_SEQUENCE, "set/get と subscribe（購読）の流れ"),
             b(
                 "単発 read: getIntProperty / getFloatProperty",
                 "単発 write: setIntProperty / setFloatProperty",
-                "購読: registerCallback（連続センサーはこれ）",
+                "subscribe（購読）: registerCallback（連続センサーはこれ）",
             ),
             code(
                 """
@@ -65,6 +66,8 @@ propertyManager.registerCallback(
         blocks = listOf(
             h("1 つのプロパティは 4 つの属性を持つ"),
             dia(DiagramType.PROPERTY_ANATOMY, "id を軸に area/access/changeMode/型"),
+            dia(DiagramType.AREA_ID, "areaId = どの“場所”の値か"),
+            dia(DiagramType.CHANGE_MODE, "changeMode で subscribe 時の出方が変わる"),
             b(
                 "area: GLOBAL か、座席/窓などゾーン別か（areaId）",
                 "access: READ / WRITE / READ_WRITE",
@@ -143,10 +146,11 @@ propertyManager.setFloatProperty(
         minutes = 13,
         blocks = listOf(
             h("走行中は OS が UI を制限する"),
+            dia(DiagramType.UXR_STATE, "停車中フル UI ↔ 走行中の制限 UI"),
             p(
-                "CarUxRestrictionsManager を購読し、走行中は文字量・" +
-                    "キーボード・動画などを抑制します。これは法規/安全要件で" +
-                    "あり、OEM 審査で必ず見られます。",
+                "CarUxRestrictionsManager を subscribe（購読）し、走行中は" +
+                    "文字量・キーボード・動画などを抑制します。これは法規/" +
+                    "安全要件であり、OEM 審査で必ず見られます。",
             ),
             code(
                 """
@@ -187,6 +191,7 @@ uxr.registerListener { r ->
         blocks = listOf(
             h("OEM はアプリを再ビルドしない"),
             dia(DiagramType.RRO_OVERLAY, "base APK + overlay APK → 解決 → 画面"),
+            dia(DiagramType.RRO_FILEMAP, "同名リソースがファイル単位でどう紐づくか"),
             p(
                 "OEM は対象パッケージのリソース名を別 APK（オーバーレイ）で" +
                     "再定義し、OverlayManager で有効化します。アプリの" +

@@ -178,10 +178,12 @@ adb install app-debug.apk
         minutes = 15,
         blocks = listOf(
             h("車は『複数人・複数画面・複数音場』"),
+            dia(DiagramType.MULTIUSER, "ユーザー分離 × 複数 display"),
+            dia(DiagramType.AUDIO_ZONES, "audio zone ごとに volume / focus を独立管理"),
             b(
                 "マルチユーザー: ドライバー切替で設定/アプリが分離",
                 "マルチディスプレイ: クラスター/センター/後席(RSE)",
-                "CarAudio: ゾーン別の音量・フォーカス管理",
+                "CarAudio: zone 別の volume・audio focus 管理",
             ),
             fileMap(
                 "関連ファイル対応",

@@ -163,6 +163,7 @@ car.disconnect()
                 """,
             ),
             dia(DiagramType.DATA_FLOW, "アプリ → Manager → CarService → VHAL → 車両"),
+            dia(DiagramType.API_SEQUENCE, "set/get と subscribe（購読）の往復"),
             fileMap(
                 "この 1 行が何に紐づくか",
                 link(
@@ -368,6 +369,36 @@ val c = colorResource(R.color.cluster_accent)
         ),
     )
 
+    private val l10 = Lesson(
+        id = "b10", title = "このアプリ自体の自動更新の仕組み",
+        minutes = 7,
+        blocks = listOf(
+            h("学んだ流れが、このアプリの更新にも使われている"),
+            dia(DiagramType.UPDATE_FLOW, "push → CI build → release → アプリが確認 → 更新"),
+            p(
+                "このアプリは Play Store 外の sideload（手動配布）なので、" +
+                    "GitHub Actions が push のたびに APK を build し、" +
+                    "rolling release に添付します。アプリは起動時に最新の " +
+                    "commit SHA を比較し、新しければダイアログを出します。",
+            ),
+            b(
+                "ファイル名は常に app-debug.apk（中身だけ差し替え）",
+                "見分けはホーム最下部の『ビルド 0.1.N+sha』表示で",
+                "実インストールは Android 仕様でユーザー確認が必須",
+            ),
+            note(
+                "完全無確認の自動更新は OS が許可しないため、" +
+                    "『自動チェック＋ワンタップ更新』が上限です。",
+            ),
+            quiz(
+                "sideload アプリの更新で最後に必ず必要なのは？",
+                listOf("何も不要で自動完了", "ユーザーのインストール確認", "Play Store 審査"),
+                1,
+                "提供元不明のアプリ許可とインストール確認は OS 必須。",
+            ),
+        ),
+    )
+
     val course = Course(
         level = CourseLevel.BEGINNER,
         title = "AAOS をはじめる",
@@ -392,6 +423,11 @@ val c = colorResource(R.color.cluster_accent)
                 "実機への橋渡し",
                 "エミュレータ起動と Auto/AAOS の整理",
                 listOf(l8, l9),
+            ),
+            Module(
+                "このアプリの裏側",
+                "自動更新の仕組み（学んだ流れの実例）",
+                listOf(l10),
             ),
         ),
     )

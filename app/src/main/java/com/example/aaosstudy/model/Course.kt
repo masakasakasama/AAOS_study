@@ -90,6 +90,14 @@ enum class DiagramType {
     PERMISSION_FLOW,
     BUILD_PIPELINE,
     PROPERTY_ANATOMY,
+    API_SEQUENCE,
+    RRO_FILEMAP,
+    AREA_ID,
+    CHANGE_MODE,
+    UXR_STATE,
+    AUDIO_ZONES,
+    MULTIUSER,
+    UPDATE_FLOW,
 }
 
 // --- terse authoring helpers ---
