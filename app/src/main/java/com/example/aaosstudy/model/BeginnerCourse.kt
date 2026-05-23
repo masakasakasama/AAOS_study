@@ -17,6 +17,7 @@ object BeginnerCourse {
                     "映すだけ）とは別物で、AAOS は車そのものの OS です。",
             ),
             dia(DiagramType.CLUSTER_VS_IVI, "クラスターと IVI は別アプリ・別画面"),
+            dia(DiagramType.LAYER_STACK, "全体像の予告：アプリ → … → 車両 の5層"),
             h("スマホ Android と何が違う？"),
             b(
                 "車両データ（速度・燃料・空調…）に触れる Car API がある",
@@ -65,6 +66,7 @@ object BeginnerCourse {
                     "一員で、VHAL を通じて値を読み書きします。",
             ),
             dia(DiagramType.ECU_NETWORK, "AAOS は CAN/Ethernet の先の世界と VHAL で会話"),
+            dia(DiagramType.CLUSTER_VS_IVI, "同じ AAOS 上のクラスターとセンター IVI"),
             h("学習者が押さえる構図"),
             b(
                 "クラスター = 速度計など、安全要件が高い表示専用に近い画面",
@@ -202,6 +204,8 @@ car.disconnect()
         minutes = 13,
         blocks = listOf(
             h("色・文字・寸法はコードに埋め込まない"),
+            dia(DiagramType.RRO_OVERLAY, "リソース名そのまま、値だけ overlay で差し替え"),
+            dia(DiagramType.RRO_FILEMAP, "同名リソースがファイル単位でどう紐づくか"),
             p(
                 "AAOS では OEM がアプリを再コンパイルせずに見た目だけ" +
                     "差し替えます。だから色や文字列はリソース名で参照し、" +
@@ -261,6 +265,8 @@ val c = colorResource(R.color.cluster_accent)
         minutes = 11,
         blocks = listOf(
             h("実車で AAOS はどう使われたか"),
+            dia(DiagramType.CLUSTER_VS_IVI, "Polestar/Volvo はクラスターと IVI を1つの OS で統合"),
+            dia(DiagramType.RRO_OVERLAY, "ブランド色/ロゴは RRO で差し替え"),
             case(
                 "Polestar 2 / Volvo Cars",
                 "Polestar 2 は 2020 年、Google ビルトイン（Google マップ・" +
@@ -302,6 +308,8 @@ val c = colorResource(R.color.cluster_accent)
         minutes = 9,
         blocks = listOf(
             h("ここまでの用語を一気に整理"),
+            dia(DiagramType.LAYER_STACK, "復習：5層と用語の位置関係"),
+            dia(DiagramType.DATA_FLOW, "復習：値が流れる道筋"),
             term("VHAL: 車両と Android の安定インターフェース。"),
             term("CarPropertyManager: アプリ側から車両値を読み書きする窓口。"),
             term("RRO: 実行時にリソースを差し替える OEM 向け仕組み。"),
@@ -323,6 +331,7 @@ val c = colorResource(R.color.cluster_accent)
         minutes = 12,
         blocks = listOf(
             h("実機が無くても学べる"),
+            dia(DiagramType.BUILD_PIPELINE, "ソース → ビルド → エミュレータ → adb install"),
             p(
                 "Android Studio の Device Manager で『Automotive』系の" +
                     "システムイメージを選ぶと、AAOS エミュレータが使えます。" +

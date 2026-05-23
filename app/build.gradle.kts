@@ -27,9 +27,24 @@ android {
         )
     }
 
+    signingConfigs {
+        // 固定鍵。全ビルドを同じ鍵で署名 → アンインストール無しで上書き更新できる。
+        // 学習用サンプルのため debug 用途の鍵をリポジトリに同梱している。
+        create("shared") {
+            storeFile = file("keystore/aaosstudy.jks")
+            storePassword = "aaosstudy"
+            keyAlias = "aaosstudy"
+            keyPassword = "aaosstudy"
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("shared")
+        }
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("shared")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
