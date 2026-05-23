@@ -12,12 +12,12 @@ object AdvancedCourse {
             h("CarService は『方針』の層"),
             p(
                 "CarService は常駐の privileged な Service 群（system " +
-                    "server 側で動く特別な権限を持つプロセス）。" +
+                    "server 側で動く特別なpermissionを持つプロセス）。" +
                     "CarPropertyService が VHAL の subscribe を集約し、" +
                     "permission チェック・UX restriction・キャッシュをして" +
-                    "全アプリへ change イベントを配信します。",
+                    "全アプリへ change イベントをdispatchします。",
             ),
-            dia(DiagramType.DATA_FLOW, "Service が購読を集約し全リスナーへ分配"),
+            dia(DiagramType.DATA_FLOW, "Service がsubscribeを集約し全リスナーへdispatch"),
             fileMap(
                 "CarService の主要ファイル対応",
                 link(
@@ -28,7 +28,7 @@ object AdvancedCourse {
                 link(
                     "ICarProperty 実装",
                     "packages/services/Car/service/.../CarPropertyService.java",
-                    "権限・購読・配信の実体。",
+                    "permission・subscribe・dispatchの実体。",
                 ),
                 link(
                     "VHAL 接続層",
@@ -38,10 +38,10 @@ object AdvancedCourse {
                 ),
             ),
             quiz(
-                "権限検査が実際に行われる層は？",
+                "permission検査が実際に行われる層は？",
                 listOf("アプリ", "CarService", "VHAL"),
                 1,
-                "Manager は薄いプロキシ。検査・分配は CarService の責務。",
+                "Manager は薄いプロキシ。検査・dispatchは CarService の責務。",
             ),
         ),
     )
@@ -253,7 +253,7 @@ adb install app-debug.apk
             h("『設定温度を上げる』を全層で説明する"),
             p(
                 "アプリの setFloatProperty(HVAC_TEMPERATURE_SET, zone, v)" +
-                    " から、CarService の権限検査、PropertyHalService、VHAL、" +
+                    " から、CarService のpermission検査、PropertyHalService、VHAL、" +
                     "そして echo の change イベントが UI に戻るまでを、" +
                     "ファイル名付きで自分の言葉で説明できれば上級到達です。",
             ),
@@ -270,7 +270,7 @@ adb install app-debug.apk
                     "アプリが再 read するしかない",
                 ),
                 1,
-                "書込み後の変化は change イベントとして購読側へ返る。",
+                "書込み後の変化は change イベントとしてsubscribe側へ返る。",
             ),
         ),
     )

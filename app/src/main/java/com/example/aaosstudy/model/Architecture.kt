@@ -31,9 +31,9 @@ object Architecture {
         ArchLayer(
             name = "3. Car Service（システムサービス）",
             oneLiner = "常駐の特権サービス。方針（ポリシー）の層。",
-            detail = "車両権限の検査、購読管理、走行中の UX 制限、" +
+            detail = "車両 permissionの検査、subscribe管理、走行中の UX 制限、" +
                 "プロパティのキャッシュ、変更イベントを全アプリへ" +
-                "配信する。",
+                "dispatchする。",
             examples = listOf("CarPropertyService", "CarPowerService"),
         ),
         ArchLayer(

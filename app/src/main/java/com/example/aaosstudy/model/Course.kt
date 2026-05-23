@@ -112,6 +112,9 @@ enum class DiagramType {
     MULTIUSER,
     UPDATE_FLOW,
     ASSET_MAP,
+    SYSTEMUI_BARS,
+    MEDIA_AGG,
+    DIALER_STACK,
 }
 
 // --- terse authoring helpers ---

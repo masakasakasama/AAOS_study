@@ -54,6 +54,9 @@ fun DiagramView(type: DiagramType, caption: String, modifier: Modifier = Modifie
                 DiagramType.MULTIUSER -> MultiUser()
                 DiagramType.UPDATE_FLOW -> UpdateFlow()
                 DiagramType.ASSET_MAP -> AssetMap()
+                DiagramType.SYSTEMUI_BARS -> SystemUiBars()
+                DiagramType.MEDIA_AGG -> MediaAgg()
+                DiagramType.DIALER_STACK -> DialerStack()
             }
         }
         Text(
@@ -647,6 +650,78 @@ private fun MultiUser() {
             color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(top = 6.dp),
         )
+    }
+}
+
+@Composable
+private fun SystemUiBars() {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp))
+            .padding(8.dp)
+    ) {
+        NodeBox(
+            "Status Bar（上）",
+            "時刻 / 接続 / 通知アイコン",
+            bg = MaterialTheme.colorScheme.primary.copy(0.18f),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Box(Modifier.size(6.dp))
+        NodeBox(
+            "アプリ表示領域",
+            "Launcher / 各アプリ",
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Box(Modifier.size(6.dp))
+        NodeBox(
+            "Nav Bar（下）",
+            "ホーム / 戻る / HVAC ショートカット等",
+            bg = MaterialTheme.colorScheme.secondary.copy(0.16f),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Text(
+            "バーの有無・高さ・要素は dimens/レイアウト → RRO で差し替え",
+            fontSize = 10.sp,
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.padding(top = 6.dp),
+        )
+    }
+}
+
+@Composable
+private fun MediaAgg() {
+    Column(Modifier.fillMaxWidth()) {
+        NodeBox(
+            "Car Media（センター）",
+            "共通 UI で複数アプリを横断",
+            bg = MaterialTheme.colorScheme.primary.copy(0.18f),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        ArrowDown()
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            NodeBox("音楽アプリ A", "MediaBrowserService", modifier = Modifier.weight(1f))
+            NodeBox("Podcast B", "MediaBrowserService", modifier = Modifier.weight(1f))
+            NodeBox("Radio C", "MediaBrowserService", modifier = Modifier.weight(1f))
+        }
+        Text(
+            "各アプリは MediaBrowserService を実装するだけで Car Media に載る",
+            fontSize = 10.sp,
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.padding(top = 6.dp),
+        )
+    }
+}
+
+@Composable
+private fun DialerStack() {
+    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        NodeBox("Car Dialer（UI）", "発信 / 履歴 / 連絡先", bg = MaterialTheme.colorScheme.primary.copy(0.18f), modifier = Modifier.fillMaxWidth())
+        ArrowDown()
+        NodeBox("Bluetooth HFP / PBAP", "通話と電話帳のプロファイル", modifier = Modifier.fillMaxWidth())
+        ArrowDown()
+        NodeBox("スマホ（接続中）", "実際の回線はスマホ側", bg = MaterialTheme.colorScheme.secondary.copy(0.16f), modifier = Modifier.fillMaxWidth())
     }
 }
 

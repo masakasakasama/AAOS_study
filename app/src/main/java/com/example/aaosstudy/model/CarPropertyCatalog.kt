@@ -48,7 +48,7 @@ car.disconnect()
             propertyId = "VehiclePropertyIds.PERF_VEHICLE_SPEED",
             area = "GLOBAL（area = 0）",
             access = "READ（読み取り）",
-            summary = "連続センサー。ポーリングせず、コールバックで購読して" +
+            summary = "連続センサー。ポーリングせず、コールバックでsubscribeして" +
                 "変化時だけ反応する。",
             appCode = """
 propertyManager.registerCallback(
@@ -65,9 +65,9 @@ propertyManager.registerCallback(
             """.trim(),
             callChain = listOf(
                 "アプリが CarPropertyManager にコールバック登録",
-                "CarService が VHAL のプロパティを購読",
+                "CarService が VHAL のプロパティをsubscribe",
                 "VHAL（ベンダー HAL / エミュレータ）が新しい値を push",
-                "CarService が CarPropertyValue をアプリへ配信",
+                "CarService が CarPropertyValue をアプリへdispatch",
             ),
         ),
         CarPropertyDoc(
@@ -100,7 +100,7 @@ val label = when (gear) {
             area = "SEAT（座席ゾーンごとの areaId）",
             access = "READ_WRITE（読み書き）",
             summary = "ゾーン別プロパティ。座席エリアごとに値を持つ。" +
-                "Car.PERMISSION_CONTROL_CAR_CLIMATE 権限が必要。",
+                "Car.PERMISSION_CONTROL_CAR_CLIMATE permissionが必要。",
             appCode = """
 val driverZone = VehicleAreaSeat.SEAT_ROW_1_LEFT
 propertyManager.setFloatProperty(
@@ -111,9 +111,9 @@ propertyManager.setFloatProperty(
             """.trim(),
             callChain = listOf(
                 "アプリが setFloatProperty(prop, areaId, value) を呼ぶ",
-                "CarService が呼び出し元の車両権限を検査",
+                "CarService が呼び出し元の車両 permissionを検査",
                 "その座席エリア向けに書き込みを VHAL へ転送",
-                "VHAL が確定、変更イベントが購読側へ返る",
+                "VHAL が確定、変更イベントがsubscribe側へ返る",
             ),
         ),
         CarPropertyDoc(

@@ -10,11 +10,11 @@ object IntermediateCourse {
         minutes = 16,
         blocks = listOf(
             h("3 つのアクセス様式"),
-            dia(DiagramType.API_SEQUENCE, "set/get と subscribe（購読）の流れ"),
+            dia(DiagramType.API_SEQUENCE, "set/get と subscribeの流れ"),
             b(
                 "単発 read: getIntProperty / getFloatProperty",
                 "単発 write: setIntProperty / setFloatProperty",
-                "subscribe（購読）: registerCallback（連続センサーはこれ）",
+                "subscribe: registerCallback（連続センサーはこれ）",
             ),
             code(
                 """
@@ -31,13 +31,13 @@ propertyManager.registerCallback(
 )
                 """,
             ),
-            dia(DiagramType.DATA_FLOW, "購読の値は逆向きに callback で返る"),
+            dia(DiagramType.DATA_FLOW, "subscribeの値は逆向きに callback で返る"),
             fileMap(
                 "API がどこに紐づくか",
                 link(
                     "CarPropertyManager.registerCallback()",
                     "packages/services/Car/service/.../CarPropertyService.java",
-                    "Binder 越しに購読登録され、Service が VHAL を購読。",
+                    "Binder 越しにsubscribe登録され、Service が VHAL をsubscribe。",
                 ),
                 link(
                     "VehiclePropertyIds.PERF_VEHICLE_SPEED",
@@ -45,17 +45,17 @@ propertyManager.registerCallback(
                     "プロパティ ID の正体は VHAL 契約の enum。",
                 ),
             ),
-            warn("連続値をポーリングしない。必ず購読し、変化時だけ処理する。"),
+            warn("連続値をポーリングしない。必ずsubscribeし、変化時だけ処理する。"),
             tryIt(
                 "vhal", "VHAL Playground",
-                "速度スライダーを動かし、購読相当でメーターが追従する" +
+                "速度スライダーを動かし、subscribe相当でメーターが追従する" +
                     "様子を確認しましょう。",
             ),
             quiz(
                 "連続的に変わる速度を扱う最適解は？",
-                listOf("ループで getFloatProperty", "registerCallback で購読", "setProperty"),
+                listOf("ループで getFloatProperty", "registerCallback でsubscribe", "setProperty"),
                 1,
-                "連続センサーは購読。ポーリングは無駄と遅延の元。",
+                "連続センサーはsubscribe。ポーリングは無駄と遅延の元。",
             ),
         ),
     )
@@ -105,25 +105,25 @@ propertyManager.setFloatProperty(
     )
 
     private val l3 = Lesson(
-        id = "i3", title = "HVAC 制御とゾーン・権限",
+        id = "i3", title = "HVAC 制御とゾーン・permission",
         minutes = 14,
         blocks = listOf(
-            h("空調はゾーン × 権限の典型例"),
+            h("空調はゾーン × permissionの典型例"),
             dia(DiagramType.HVAC_ZONES, "areaId(VehicleAreaSeat) で座席を指定"),
-            dia(DiagramType.PERMISSION_FLOW, "書込みは CarService が権限を検査"),
+            dia(DiagramType.PERMISSION_FLOW, "書込みは CarService がpermissionを検査"),
             p(
                 "HVAC 書込みには Car.PERMISSION_CONTROL_CAR_CLIMATE が" +
-                    "必要。権限が無い・署名が合わないと SecurityException。",
+                    "必要。permissionが無い・signingが合わないと SecurityException。",
             ),
             fileMap(
-                "権限はどこで定義/検査されるか",
+                "permissionはどこで定義/検査されるか",
                 link(
                     "Car.PERMISSION_CONTROL_CAR_CLIMATE",
                     "packages/services/Car/car-lib/.../Car.java",
-                    "権限文字列の定義場所。",
+                    "permission文字列の定義場所。",
                 ),
                 link(
-                    "権限の宣言（protectionLevel）",
+                    "permissionの宣言（protectionLevel）",
                     "packages/services/Car/service/AndroidManifest.xml",
                     "signature|privileged 等の保護レベルがここ。",
                 ),
@@ -134,9 +134,9 @@ propertyManager.setFloatProperty(
             ),
             quiz(
                 "HVAC 書込みで SecurityException が出る主因は？",
-                listOf("値が範囲外", "車両権限/署名の不足", "areaId が 0"),
+                listOf("値が範囲外", "車両 permission/signingの不足", "areaId が 0"),
                 1,
-                "制御系プロパティは保護レベルが高く、権限と署名が要る。",
+                "制御系プロパティは保護レベルが高く、permissionとsigningが要る。",
             ),
         ),
     )
@@ -148,7 +148,7 @@ propertyManager.setFloatProperty(
             h("走行中は OS が UI を制限する"),
             dia(DiagramType.UXR_STATE, "停車中フル UI ↔ 走行中の制限 UI"),
             p(
-                "CarUxRestrictionsManager を subscribe（購読）し、走行中は" +
+                "CarUxRestrictionsManager を subscribeし、走行中は" +
                     "文字量・キーボード・動画などを抑制します。これは法規/" +
                     "安全要件であり、OEM 審査で必ず見られます。",
             ),
@@ -253,7 +253,7 @@ uxr.registerListener { r ->
             h("クラスターは『安全な表示』が主役"),
             dia(DiagramType.CLUSTER_VS_IVI, "クラスターは要件が高い別アプリ"),
             p(
-                "クラスターは速度・ギア・警告灯などを購読して描画。" +
+                "クラスターは速度・ギア・警告灯などをsubscribeして描画。" +
                     "AOSP には参照クラスターアプリがあり、これを土台に OEM が" +
                     "RRO で意匠を当てます。",
             ),
@@ -284,43 +284,43 @@ uxr.registerListener { r ->
     )
 
     private val l7 = Lesson(
-        id = "i7", title = "署名・システムアプリ・権限の現実",
+        id = "i7", title = "signing・システムアプリ・permissionの現実",
         minutes = 12,
         blocks = listOf(
             h("なぜ普通の APK では動かない API があるか"),
             p(
                 "制御系プロパティや一部 Manager は signature|privileged" +
-                    "権限が必要。OEM のプラットフォーム鍵で署名し、" +
+                    "permissionが必要。OEM のプラットフォーム鍵でsigningし、" +
                     "privapp-permissions allowlist に載って初めて使えます。",
             ),
             fileMap(
-                "権限許可リストの対応",
+                "permission許可リストの対応",
                 link(
-                    "アプリが要求する車両権限",
+                    "アプリが要求する車両 permission",
                     "etc/permissions/privapp-permissions-*.xml",
                     "privileged アプリの許可ホワイトリスト。",
                 ),
                 link(
-                    "プラットフォーム署名鍵",
+                    "プラットフォームsigning鍵",
                     "build/make/target/product/security/ (AOSP 既定鍵)",
                     "実 OEM は独自鍵に差し替える。",
                 ),
             ),
             warn(
-                "学習目的のサンドボックス（本アプリ）は権限不要。実機の" +
-                    "制御系を触るには署名・allowlist が前提と理解しておく。",
+                "学習目的のサンドボックス（本アプリ）はpermission不要。実機の" +
+                    "制御系を触るにはsigning・allowlist が前提と理解しておく。",
             ),
             quiz(
                 "制御系 Car API を一般 APK で呼ぶと？",
                 listOf("普通に動く", "SecurityException 等で弾かれる", "警告だけ"),
                 1,
-                "signature|privileged 権限と allowlist が無いと拒否される。",
+                "signature|privileged permissionと allowlist が無いと拒否される。",
             ),
         ),
     )
 
     private val l8 = Lesson(
-        id = "i8", title = "購読のライフサイクルとスレッド",
+        id = "i8", title = "subscribeのライフサイクルとスレッド",
         minutes = 13,
         blocks = listOf(
             h("登録したら必ず解除する"),
@@ -460,12 +460,12 @@ override fun onStop() {
             ),
             Module(
                 "クラスターと配備",
-                "クラスター実装、署名と権限の現実",
+                "クラスター実装、signingとpermissionの現実",
                 listOf(l6, l7),
             ),
             Module(
                 "運用の勘所",
-                "購読ライフサイクル、SystemUI と配置",
+                "subscribeライフサイクル、SystemUI と配置",
                 listOf(l8, l9),
             ),
             Module(
@@ -473,6 +473,7 @@ override fun onStop() {
                 "参照アプリを土台に、再利用度で使い分ける",
                 listOf(l10),
             ),
+            ReferenceAppDeepDive.module,
         ),
     )
 }

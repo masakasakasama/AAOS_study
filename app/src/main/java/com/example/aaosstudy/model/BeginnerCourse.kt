@@ -120,7 +120,7 @@ object BeginnerCourse {
                 link(
                     "CarService (CarPropertyService 等)",
                     "packages/services/Car/service/src/com/android/car/",
-                    "権限・購読・UX 制限を司る常駐システムサービス。",
+                    "permission・subscribe・UX 制限を司る常駐システムサービス。",
                 ),
                 link(
                     "VehiclePropertyIds 契約",
@@ -165,7 +165,7 @@ car.disconnect()
                 """,
             ),
             dia(DiagramType.DATA_FLOW, "アプリ → Manager → CarService → VHAL → 車両"),
-            dia(DiagramType.API_SEQUENCE, "set/get と subscribe（購読）の往復"),
+            dia(DiagramType.API_SEQUENCE, "set/get と subscribeの往復"),
             fileMap(
                 "この 1 行が何に紐づくか",
                 link(
@@ -181,12 +181,12 @@ car.disconnect()
             ),
             warn(
                 "AndroidManifest で <uses-library android:name=" +
-                    "\"android.car\"/> が必要。さらに書込み系は車両権限が要る" +
+                    "\"android.car\"/> が必要。さらに書込み系は車両 permissionが要る" +
                     "（中級で詳説）。",
             ),
             tryIt(
                 "api", "Car API Explorer を見る",
-                "接続・速度購読・HVAC 設定など、実コードと呼び出し連鎖を" +
+                "接続・速度subscribe・HVAC 設定など、実コードと呼び出し連鎖を" +
                     "プロパティ別に確認できます。",
             ),
             quiz(
