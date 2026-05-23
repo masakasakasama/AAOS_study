@@ -58,7 +58,20 @@ sealed interface Block {
     ) : Block
     data class FileMap(val title: String, val links: List<FileLink>) : Block
     data class Defaults(val title: String, val rows: List<DefaultRow>) : Block
+    data class AssetTable(val title: String, val rows: List<AssetRow>) : Block
 }
+
+/**
+ * AOSP 標準アセット（参照アプリ等）の 1 行。
+ * reuseTier: 5=ほぼそのまま / 4=RRO だけ / 3=部分改造 / 2=雛形 / 1=テスト用。
+ */
+data class AssetRow(
+    val name: String,
+    val role: String,
+    val location: String,
+    val reuseTier: Int,
+    val reuseLabel: String,
+)
 
 /** "このファイルの ○○ が、このファイルの ×× に紐づく" を表す。 */
 data class FileLink(
@@ -98,6 +111,7 @@ enum class DiagramType {
     AUDIO_ZONES,
     MULTIUSER,
     UPDATE_FLOW,
+    ASSET_MAP,
 }
 
 // --- terse authoring helpers ---
@@ -129,6 +143,15 @@ fun def(item: String, aospValue: String, definedIn: String): DefaultRow =
     DefaultRow(item, aospValue, definedIn)
 fun defaults(title: String, vararg rows: DefaultRow): Block =
     Block.Defaults(title, rows.toList())
+fun asset(
+    name: String,
+    role: String,
+    location: String,
+    reuseTier: Int,
+    reuseLabel: String,
+): AssetRow = AssetRow(name, role, location, reuseTier, reuseLabel)
+fun assetTable(title: String, rows: List<AssetRow>): Block =
+    Block.AssetTable(title, rows)
 
 object Curriculum {
     val courses: List<Course> by lazy {

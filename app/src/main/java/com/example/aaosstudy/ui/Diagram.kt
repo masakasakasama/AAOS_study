@@ -53,6 +53,7 @@ fun DiagramView(type: DiagramType, caption: String, modifier: Modifier = Modifie
                 DiagramType.AUDIO_ZONES -> AudioZones()
                 DiagramType.MULTIUSER -> MultiUser()
                 DiagramType.UPDATE_FLOW -> UpdateFlow()
+                DiagramType.ASSET_MAP -> AssetMap()
             }
         }
         Text(
@@ -646,6 +647,44 @@ private fun MultiUser() {
             color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(top = 6.dp),
         )
+    }
+}
+
+@Composable
+private fun AssetMap() {
+    Column(Modifier.fillMaxWidth()) {
+        NodeBox(
+            "アプリ層: 参照アプリ（packages/apps/Car/*）",
+            "SystemUI / Settings / Media / Launcher / Dialer …",
+            bg = MaterialTheme.colorScheme.primary.copy(0.18f),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        ArrowDown()
+        NodeBox(
+            "リソース層: overlay 可能なリソース・car テーマ",
+            "OEM は RRO で値だけ差し替え（無改修）",
+            modifier = Modifier.fillMaxWidth(),
+        )
+        ArrowDown()
+        NodeBox(
+            "API/基盤層: android.car・CarService・参照 VHAL",
+            "基本そのまま利用（拡張は VHAL/permission）",
+            bg = MaterialTheme.colorScheme.secondary.copy(0.16f),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Box(Modifier.size(8.dp))
+        Text(
+            "再利用度: ★そのまま ◎RROだけ ○部分改造 △雛形 ☆テスト用",
+            fontSize = 10.sp,
+            color = MaterialTheme.colorScheme.secondary,
+        )
+        Row(Modifier.fillMaxWidth().padding(top = 6.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Tag("★/◎ Media・Settings・SystemUI", MaterialTheme.colorScheme.primary.copy(0.18f), MaterialTheme.colorScheme.onSurface)
+        }
+        Row(Modifier.fillMaxWidth().padding(top = 6.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Tag("△ Cluster（作り込み）", MaterialTheme.colorScheme.error.copy(0.16f), MaterialTheme.colorScheme.onSurface)
+            Tag("☆ KitchenSink（学習）", MaterialTheme.colorScheme.surface, MaterialTheme.colorScheme.onSurface)
+        }
     }
 }
 

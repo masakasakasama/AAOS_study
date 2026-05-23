@@ -391,6 +391,58 @@ override fun onStop() {
         ),
     )
 
+    private val l10 = Lesson(
+        id = "i10", title = "AOSP 標準アセットを土台にする（参照アプリ活用）",
+        minutes = 16,
+        blocks = listOf(
+            h("大方針：作らない。土台を使い、足りない所だけ"),
+            dia(DiagramType.ASSET_MAP, "アプリ / リソース / API・基盤 の3層と再利用度"),
+            p(
+                "AAOS は『参照アプリ＋標準リソース＋ Car API/基盤』が" +
+                    "セットで来ます。OEM の基本戦略は、これらを土台にして" +
+                    "RRO で見た目を差し替え、足りない機能だけ作ること。" +
+                    "ゼロから書かないのがコスト最小です。",
+            ),
+            h("参照アプリ（再利用度つき）"),
+            assetTable("packages/apps/Car/* と関連", AospAssets.apps),
+            h("API/基盤層（基本そのまま使う）"),
+            assetTable("android.car / CarService / 参照 VHAL", AospAssets.platform),
+            b(
+                "★ そのまま: Media / DeveloperOptions / android.car / CarService",
+                "◎ RRO で足りる: SystemUI / Settings / Dialer / 参照 VHAL",
+                "○ 部分改造: Launcher / Messenger / Radio",
+                "△ 雛形(作り込み前提): Cluster",
+                "☆ 学習・テスト用(製品外): EmbeddedKitchenSinkApp",
+            ),
+            note(
+                "パッケージ名・場所は AOSP バージョンで変わります（特に " +
+                    "Cluster と HVAC は版差が大きい）。表の場所は目安です。",
+            ),
+            case(
+                "Volvo / Polestar",
+                "共通の AAOS 参照アプリを土台に、車種差は RRO・VHAL " +
+                    "config・audio 構成へ寄せる運用。安定 API に寄せるほど" +
+                    "新車種の立ち上げが速い、という再利用の好例。",
+            ),
+            tryIt(
+                "rro", "RRO テーマラボで『差し替え』を体感",
+                "参照アプリの見た目を、コード無改修で RRO だけ変える" +
+                    "イメージをラボで掴めます。",
+            ),
+            quiz(
+                "OEM が最初に取る基本戦略は？",
+                listOf(
+                    "全アプリをゼロから自作",
+                    "AOSP 参照アプリを土台に RRO で差し替え＋不足分だけ作る",
+                    "AOSP を使わず独自 OS",
+                ),
+                1,
+                "土台（参照アプリ＋基盤）を再利用し、差分だけ作る/RRO する" +
+                    "のが量産で最もスケールする。",
+            ),
+        ),
+    )
+
     val course = Course(
         level = CourseLevel.INTERMEDIATE,
         title = "Car API を使いこなす",
@@ -415,6 +467,11 @@ override fun onStop() {
                 "運用の勘所",
                 "購読ライフサイクル、SystemUI と配置",
                 listOf(l8, l9),
+            ),
+            Module(
+                "AOSP 標準アセット活用",
+                "参照アプリを土台に、再利用度で使い分ける",
+                listOf(l10),
             ),
         ),
     )

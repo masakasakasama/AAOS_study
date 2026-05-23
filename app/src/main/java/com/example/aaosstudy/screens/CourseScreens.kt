@@ -419,6 +419,59 @@ private fun BlockView(block: Block, onNavigateRoute: (String) -> Unit) {
                 }
             }
         }
+
+        is Block.AssetTable -> Column(
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.background)
+                .padding(14.dp)
+        ) {
+            Text(
+                "AOSP 標準アセット: ${block.title}",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold,
+            )
+            block.rows.forEach { r ->
+                val tierColor = when (r.reuseTier) {
+                    5, 4 -> MaterialTheme.colorScheme.primary
+                    3 -> MaterialTheme.colorScheme.secondary
+                    2 -> MaterialTheme.colorScheme.error
+                    else -> MaterialTheme.colorScheme.onSurface.copy(0.6f)
+                }
+                Column(Modifier.padding(top = 10.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            r.name,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.weight(1f),
+                        )
+                        Text(
+                            r.reuseLabel,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = tierColor,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(tierColor.copy(alpha = 0.12f))
+                                .padding(horizontal = 8.dp, vertical = 3.dp),
+                        )
+                    }
+                    Text(
+                        r.role,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                    Text(
+                        r.location,
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(0.8f),
+                    )
+                }
+            }
+        }
     }
 }
 

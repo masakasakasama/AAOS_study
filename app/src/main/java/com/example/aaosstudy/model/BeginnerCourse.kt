@@ -408,6 +408,31 @@ val c = colorResource(R.color.cluster_accent)
         ),
     )
 
+    private val l11 = Lesson(
+        id = "b11", title = "AOSP には『土台アプリ』が標準で付いてくる",
+        minutes = 8,
+        blocks = listOf(
+            h("ゼロから作らない。標準アセットを使う"),
+            dia(DiagramType.ASSET_MAP, "アプリ / リソース / API・基盤 の3層"),
+            p(
+                "AAOS には設定・メディア・電話・SystemUI などの参照アプリと、" +
+                    "Car API/基盤が標準で付いてきます。OEM はこれを土台に、" +
+                    "RRO で見た目を変え、足りない所だけ作ります。",
+            ),
+            assetTable("代表的な参照アプリ", AospAssets.apps.take(5)),
+            note(
+                "『再利用度』＝そのまま使える(★)〜RROだけ(◎)〜作り込み(△)。" +
+                    "中級コースで全体像と使い分けを詳しく扱います。",
+            ),
+            quiz(
+                "AOSP 参照アプリの一番うれしい点は？",
+                listOf("毎回自作が必要", "土台として再利用でき、差分だけ作れる", "改変できない"),
+                1,
+                "標準アセットを土台に差分開発できるのが最大の利点。",
+            ),
+        ),
+    )
+
     val course = Course(
         level = CourseLevel.BEGINNER,
         title = "AAOS をはじめる",
@@ -432,6 +457,11 @@ val c = colorResource(R.color.cluster_accent)
                 "実機への橋渡し",
                 "エミュレータ起動と Auto/AAOS の整理",
                 listOf(l8, l9),
+            ),
+            Module(
+                "AOSP の土台を知る",
+                "標準で付いてくる参照アプリと再利用",
+                listOf(l11),
             ),
             Module(
                 "このアプリの裏側",
