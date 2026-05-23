@@ -9,7 +9,7 @@ package com.example.aaosstudy.model
  */
 object AospAssets {
 
-    /** アプリ層: packages/apps/Car/* などの参照アプリ群。 */
+    /** アプリ層: packages/apps/Car 配下などの参照アプリ群。 */
     val apps: List<AssetRow> = listOf(
         asset(
             "Car SystemUI", "system bars / 通知 / 音量 / ユーザー切替 /(HVACパネル)",
