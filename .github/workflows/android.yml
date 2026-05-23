@@ -9,6 +9,8 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
+  issues: write
 
 jobs:
   build:
@@ -28,10 +30,36 @@ jobs:
           gradle-version: "8.7"
 
       - name: Build debug APK
-        run: >
-          gradle :app:assembleDebug --no-daemon --stacktrace
-          -PbuildSha=${{ github.sha }}
-          -PbuildNumber=${{ github.run_number }}
+        run: |
+          set -o pipefail
+          gradle :app:assembleDebug --no-daemon --stacktrace \
+            -PbuildSha=${{ github.sha }} \
+            -PbuildNumber=${{ github.run_number }} 2>&1 | tee build.log
+
+      # ビルド失敗時、エラーの要点を PR コメントへ自動投稿（読めるようにする）
+      - name: Report build failure to PR
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          grep -nE "^e: |error: |FAILURE:|What went wrong|Caused by:|FAILED$" build.log \
+            | head -80 > err.txt || true
+          [ -s err.txt ] || tail -n 80 build.log > err.txt
+          PR=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$REPO/commits/$SHA/pulls" \
+            | jq -r '.[0].number // empty')
+          if [ -n "$PR" ]; then
+            jq -Rs --arg sha "${SHA:0:7}" \
+              '{body: ("CI build failed for `" + $sha + "`\n\n```\n" + . + "\n```")}' \
+              err.txt > payload.json
+            curl -s -X POST -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$REPO/issues/$PR/comments" \
+              -d @payload.json
+          fi
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
