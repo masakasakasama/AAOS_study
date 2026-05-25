@@ -10,3 +10,8 @@
 local.properties
 *.apk
 *.aab
+
+# web (Vite) — keep source(web/) and built output(/docs), ignore deps
+web/node_modules
+web/dist
+node_modules
