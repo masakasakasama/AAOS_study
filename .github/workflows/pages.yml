@@ -14,6 +14,8 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  issues: write
+  pull-requests: write
 
 concurrency:
   group: pages
@@ -27,16 +29,40 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Install deps
-        run: npm ci
+      - name: Configure Pages (auto-enable as GitHub Actions source)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Build web (outputs to repo-root /docs)
+        run: |
+          set -o pipefail
+          npm install --no-audit --no-fund 2>&1 | tee /tmp/pages.log
+          npm run build 2>&1 | tee -a /tmp/pages.log
         working-directory: web
-      - name: Build (outputs to repo-root /docs)
-        run: npm run build
-        working-directory: web
-      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
+      - name: Report failure to PR
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          tail -n 80 /tmp/pages.log > err.txt 2>/dev/null || echo "(build step did not start)" > err.txt
+          PR=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$REPO/commits/$SHA/pulls" \
+            | jq -r '.[0].number // empty')
+          if [ -n "$PR" ]; then
+            jq -Rs --arg sha "${SHA:0:7}" \
+              '{body: ("Pages build failed for `" + $sha + "`\n\n```\n" + . + "\n```")}' \
+              err.txt > payload.json
+            curl -s -X POST -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$REPO/issues/$PR/comments" \
+              -d @payload.json
+          fi
 
   deploy:
     needs: build
