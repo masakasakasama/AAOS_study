@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { guide, glossaryAll } from "./guide.js";
+import Diagram from "./diagrams.jsx";
 
 export default function App() {
   const [activeId, setActiveId] = useState(guide[0].id);
@@ -203,6 +204,13 @@ function Block({ b }) {
       );
     case "code":
       return <pre className="b-code">{b.v}</pre>;
+    case "diagram":
+      return (
+        <figure className="b-figure">
+          <Diagram name={b.name} />
+          {b.cap && <figcaption>{b.cap}</figcaption>}
+        </figure>
+      );
     default:
       return null;
   }

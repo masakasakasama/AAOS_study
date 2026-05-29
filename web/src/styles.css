@@ -288,3 +288,19 @@ body {
   .b-term { grid-template-columns: 1fr; }
   .b-term dt { font-family: inherit; }
 }
+
+/* ===== diagrams ===== */
+.b-figure { margin: 8px 0 22px; }
+.dgm-wrap {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px;
+}
+.dgm { width: 100%; height: auto; display: block; }
+.b-figure figcaption {
+  text-align: center;
+  color: var(--text-mute);
+  font-size: 12px;
+  margin-top: 8px;
+}
