@@ -73,6 +73,14 @@ export const guide = [
       { t: "h", v: "1-2. App領域 と OS領域(SystemUI)" },
       { t: "p", v: "画面1枚には『アプリが描く中身』と『OSが常に出す枠』が同居します。枠を描く特別なアプリが SystemUI(AAOSでは Car SystemUI)。" },
       { t: "diagram", name: "screen", cap: "1枚の画面: 上下の枠=SystemUI、中央=あなたのApp" },
+      {
+        t: "imgrow",
+        v: [
+          { src: "./official/mobile-status-bar.png", cap: "Status Bar(上の枠) — 公式ガイド画像" },
+          { src: "./official/mobile-navigation-bar.png", cap: "Navigation Bar(下の枠) — 公式ガイド画像" },
+        ],
+      },
+      { t: "callout", kind: "note", v: "上の2枚はAndroidスマホの図ですが、車のAAOSでも『上下の常設枠=SystemUI』は同じ概念。車では下が空調バー等になります。" },
 
       { t: "h", v: "1-3. Bundled / unbundled / privileged" },
       {
@@ -108,6 +116,13 @@ export const guide = [
     blocks: [
       { t: "p", v: "AAOSは5つの層でできています。上=あなたのApp、下=車両。上の層ほど“そのまま使える完成品”が多く、下の層ほど“基盤としてそのまま使う”ものです。" },
       { t: "diagram", name: "layers", cap: "5層構造と改変の向き — 改変は上層の一部だけが理想" },
+      {
+        t: "img",
+        src: "./official/android-automotive-os.png",
+        cap: "AAOS エミュレータの実画面(公式ガイド掲載)。これがAOSPがそのまま出すIVIの素の姿",
+        credit: "Google / Android Developers",
+        frame: "wide",
+      },
       {
         t: "terms",
         v: [
@@ -167,6 +182,16 @@ export const guide = [
         ],
       },
       { t: "callout", kind: "key", v: "完成品寄り(Media/Settings/基盤)ほど“そのまま”、Clusterほど“作り込み”。この感覚が8章の優先順位に直結する。" },
+      { t: "h", v: "実例: Car Settings の構成" },
+      { t: "p", v: "下は公式ドキュメント掲載のCar Settings構成図。設定項目はXMLで階層化され、Controllerが状態を保持/反映する分離設計。" },
+      {
+        t: "img",
+        src: "./official/car-settings-components.png",
+        cap: "Car Settings コンポーネント構成(公式)",
+        credit: "Google / Android Developers",
+        frame: "wide",
+      },
+      { t: "callout", kind: "note", v: "OEMの主作業はこの上で“項目を足す/外す”だけ。各画面のロジックを再実装する必要がない、が標準アセットの強み。" },
       { t: "callout", kind: "warn", v: "パッケージ名・場所はAOSPバージョンで変わる(特にCluster/HVAC)。本表は目安。" },
     ],
   },
@@ -270,6 +295,16 @@ export const guide = [
           "基盤(Service/VHAL)に直接手を入れていないか? 代替はないか",
         ],
       },
+      { t: "h", v: "標準で得られる安全機構の例: 走行中の制限" },
+      { t: "p", v: "AAOSは“走行中はApp側で許されない操作”をOSが自動でブロックします。下は公式の実画面で、走行中に開けないアプリにかかる共通の遮断画面。" },
+      {
+        t: "img",
+        src: "./official/activity-blocking-activity.png",
+        cap: "走行中に許されないActivityを共通画面でブロック(公式)",
+        credit: "Google / Android Developers",
+        frame: "wide",
+      },
+      { t: "callout", kind: "key", v: "OEMはこの遮断画面の意匠だけ差し替えれば十分(=RRO)。安全要件を自前で実装し直さない。これも“標準アセットを最大活用”の好例。" },
       { t: "callout", kind: "note", v: "全部を一度に直す必要はない。更新の度に“標準へ1段降格”を積み重ねるだけで、年々保守が楽になる。" },
     ],
   },

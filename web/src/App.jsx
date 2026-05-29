@@ -211,6 +211,24 @@ function Block({ b }) {
           {b.cap && <figcaption>{b.cap}</figcaption>}
         </figure>
       );
+    case "img":
+      return (
+        <figure className={`b-img ${b.frame || ""}`}>
+          <img src={b.src} alt={b.alt || b.cap || ""} loading="lazy" />
+          {b.cap && <figcaption>{b.cap}{b.credit && <span className="credit"> — {b.credit}</span>}</figcaption>}
+        </figure>
+      );
+    case "imgrow":
+      return (
+        <div className="b-imgrow">
+          {b.v.map((it, i) => (
+            <figure key={i} className="b-img mini">
+              <img src={it.src} alt={it.alt || it.cap || ""} loading="lazy" />
+              {it.cap && <figcaption>{it.cap}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      );
     default:
       return null;
   }
