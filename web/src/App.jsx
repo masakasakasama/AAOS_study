@@ -54,8 +54,6 @@ export default function App() {
             <span className="toc-title">用語集</span>
           </button>
         </nav>
-
-        <div className="side-foot">PC閲覧用 / 社内共有可</div>
       </aside>
 
       <main className="main">

@@ -122,26 +122,32 @@ function Layers() {
     ["④ VHAL 層", "車両値を Android へ公開する境界(契約)", null],
     ["⑤ 車両 / エミュレータ", "実ECU・CAN / 参照VHAL", C.purple],
   ];
+  const bx = 170, bw = 400, bh = 48, gap = 12, top = 16;
+  const barH = rows.length * bh + (rows.length - 1) * gap; // 288
+  const bottom = top + barH; // 304
   return (
     <Svg vb="0 0 720 330" h={340}>
-      {rows.map((r, i) => (
-        <g key={i}>
-          <Box x={150} y={10 + i * 62} w={470} h={48} title={r[0]} sub={r[1]} accent={r[2]} />
-          {i < rows.length - 1 && (
-            <line x1={385} y1={58 + i * 62} x2={385} y2={72 + i * 62} stroke={C.line} strokeWidth="2" />
-          )}
-        </g>
-      ))}
-      {/* 改変コスト軸 */}
-      <rect x={40} y={10} width="14" height="296" rx="7" fill="url(#costgrad)" opacity="0.85" />
-      {label(34, 28, "改", { fill: C.good, bold: true })}
-      {label(34, 300, "変", { fill: C.bad, bold: true })}
-      {label(70, 34, "← 触ってよい", { fill: C.good, size: 11 })}
-      {label(70, 300, "← 基盤(極力触らない)", { fill: C.bad, size: 11 })}
-      {label(640, 34, "完成品が", { size: 11 })}
-      {label(640, 48, "多い", { size: 11 })}
-      {label(640, 290, "そのまま", { size: 11 })}
-      {label(640, 304, "使う", { size: 11 })}
+      {/* 改変コスト軸(左) */}
+      <rect x={22} y={top} width="12" height={barH} rx="6" fill="url(#costgrad)" opacity="0.9" />
+      {label(46, top + 16, "改変して", { fill: C.good, size: 11, bold: true })}
+      {label(46, top + 30, "良い領域", { fill: C.good, size: 11, bold: true })}
+      {label(46, bottom - 14, "基盤＝", { fill: C.bad, size: 11, bold: true })}
+      {label(46, bottom, "触らない", { fill: C.bad, size: 11, bold: true })}
+      {/* レイヤー */}
+      {rows.map((r, i) => {
+        const y = top + i * (bh + gap);
+        return (
+          <g key={i}>
+            <Box x={bx} y={y} w={bw} h={bh} title={r[0]} sub={r[1]} accent={r[2]} />
+            {i < rows.length - 1 && (
+              <line x1={bx + bw / 2} y1={y + bh} x2={bx + bw / 2} y2={y + bh + gap} stroke={C.line} strokeWidth="2" />
+            )}
+          </g>
+        );
+      })}
+      {/* 右ラベル */}
+      {label(bx + bw + 16, top + 20, "完成品が多い", { size: 11 })}
+      {label(bx + bw + 16, bottom - 6, "そのまま使う", { size: 11 })}
     </Svg>
   );
 }
